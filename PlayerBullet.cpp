@@ -1,6 +1,7 @@
 ﻿#include "PlayerBullet.h"
 #include "newMath.h"
 #include <assert.h>
+#include "CollisionConfig.h"
 
 void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
 
@@ -15,10 +16,13 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	worldTransform_.translation_ = position;
 	// 引数で受け取った速度をメンバに代入
 	velocity_ = velocity;
+
+	SetCollisionAttribute(kCollisionAttributePlayer);
+	SetCollisionMask(~kCollisionAttributePlayer);
 }
 
 Vector3 PlayerBullet::GetWorldPosition() {
-	Vector3 worldPos;
+	Vector3 worldPos = {};
 
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];

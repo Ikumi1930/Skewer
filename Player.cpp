@@ -1,5 +1,6 @@
 ﻿#include "Player.h"
 #include "newMath.h"
+#include "CollisionConfig.h"
 
 Player::~Player() {
 	for (PlayerBullet* bullet : bullets_) {
@@ -34,8 +35,8 @@ void Player::Attack() {
 			// 弾の速度
 			const float kBulletSpeed = 1.0f;
 			// Vector3 velocity(0, 0, kBulletSpeed);
-			Vector3 velocity;
-			Vector3 Reticle3DPos;
+			Vector3 velocity = {};
+			Vector3 Reticle3DPos = {};
 			Reticle3DPos.x = worldTransform3DReticle_.matWorld_.m[3][0];
 			Reticle3DPos.y = worldTransform3DReticle_.matWorld_.m[3][1];
 			Reticle3DPos.z = worldTransform3DReticle_.matWorld_.m[3][2];
@@ -78,6 +79,9 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	sprite2DReticle_ = Sprite::Create(
 	    textureReticle, {WinApp::kWindowWidth / 2, WinApp::kWindowHeight / 2}, {1, 1, 1, 1},
 	    {0.5f, 0.5f});
+
+	SetCollisionAttribute(kCollisionAttributePlayer);
+	SetCollisionMask(~kCollisionAttributePlayer);
 };
 
 void Player::OnCollision() {}

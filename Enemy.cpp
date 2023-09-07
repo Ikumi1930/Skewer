@@ -1,5 +1,6 @@
 ﻿#include "Enemy.h"
 #include <assert.h>
+#include "CollisionConfig.h"
 
 Enemy::~Enemy() {
 
@@ -30,7 +31,7 @@ void Enemy::Attack() {
 
 		Vector3 plaPos = player_->GetWorldPosition();
 		Vector3 enePos = GetWorldPosition();
-		Vector3 speed;
+		Vector3 speed = {};
 		speed.x = plaPos.x - enePos.x;
 		speed.y = plaPos.y - enePos.y;
 		speed.z = plaPos.z - enePos.z;
@@ -63,10 +64,13 @@ void Enemy::Initialize(Model* model, const Vector3& position, GameScene* gameSce
 	state->SetEnemy(this);
 
 	SetGameScene(gameScene);
+
+	SetCollisionAttribute(kCollisionAttributeEnemy);
+	SetCollisionMask(~kCollisionAttributeEnemy);
 }
 
 Vector3 Enemy::GetWorldPosition() {
-	Vector3 worldPos;
+	Vector3 worldPos = {};
 
 	worldPos.x = worldTransform_.translation_.x;
 	worldPos.y = worldTransform_.translation_.y;
@@ -147,4 +151,8 @@ void Enemy::Draw(const ViewProjection& view) {
 	for (EnemyBullet* bullet : bullets_) {
 		bullet->Draw(view);
 	}
+}
+
+void Enemy::OnCollision() {
+
 }

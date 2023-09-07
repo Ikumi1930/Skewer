@@ -14,6 +14,9 @@
 #include <RailCamera.h>
 #include <Skydome.h>
 #include <sstream>
+#include "Collider.h"
+#include "MT.h"
+#include "CollisionManager.h"
 
 /// <summary>
 /// ゲームシーン
@@ -45,12 +48,6 @@ public: // メンバ関数
 	/// 描画
 	/// </summary>
 	void Draw();
-
-	/// <summary>
-	/// 衝突判定と応答
-	/// </summary>
-
-	void CheckAllCollisions();
 
 	void AddEnemyBullet(EnemyBullet* enemyBullet);
 
@@ -97,7 +94,5 @@ private: // メンバ変数
 	bool isWait_ = false;
 	int32_t waitTimer_ = 0;
 
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
+	CollisionManager* collisionManager_;
 };

@@ -7,6 +7,7 @@
 #include "WorldTransform.h"
 #include "newMath.h"
 #include <list>
+#include "Collider.h"
 
 class Player;
 class GameScene;
@@ -40,7 +41,7 @@ public:
 	void Update();
 };
 
-class Enemy {
+class Enemy : public Collider{
 
 public:
 	~Enemy();
@@ -64,14 +65,14 @@ public:
 
 	void SetPlayer(Player* player) { player_ = player; }
 
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override;
 
 	static const int kShotInterval = 60;
 
 	bool IsDead() const { return isDead_; }
 
 	// 衝突を検証したら呼び出される関数
-	void OnCollision();
+	void OnCollision() override;
 	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }

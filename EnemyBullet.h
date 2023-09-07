@@ -1,8 +1,9 @@
 ﻿#pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Collider.h"
 
-class EnemyBullet {
+class EnemyBullet : public Collider {
 
 public:
 	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
@@ -13,10 +14,10 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override;
 
 	// 衝突を検証したら呼び出される関数
-	void OnCollision();
+	void OnCollision() override;
 
 private:
 	WorldTransform worldTransform_;

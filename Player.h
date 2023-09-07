@@ -9,8 +9,9 @@
 #include "WorldTransform.h"
 #include <cassert>
 #include <list>
+#include "Collider.h"
 
-class Player {
+class Player : public Collider {
 public:
 	/// <summary>
 	/// 初期化
@@ -30,10 +31,10 @@ public:
 	// 攻撃
 	void Attack();
 
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override;
 
 	// 衝突を検証したら呼び出される関数
-	void OnCollision();
+	void OnCollision() override;
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 
 	void SetParent(const WorldTransform* parent);

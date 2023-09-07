@@ -20,6 +20,8 @@ GameScene::~GameScene() {
 	for (EnemyBullet* bullet : enemyBullets_) {
 		delete bullet;
 	}
+
+	delete collisionManager_;
 }
 
 void GameScene::Initialize() {
@@ -63,6 +65,12 @@ void GameScene::Initialize() {
 	// TextureManager::Load("beam.png");
 
 	LoadEnemyPopData();
+
+	collisionManager_ = new CollisionManager();
+	collisionManager_->SetPlayer(player_);
+	for (Enemy* enemy : enemys_) {
+		collisionManager_->SetEnemy(enemy);
+	}
 }
 
 void GameScene::Update() {
@@ -98,8 +106,7 @@ void GameScene::Update() {
 		bullet->Update();
 	}
 
-	CheckAllCollisions();
-
+	collisionManager_->Update();
 	skydome_->Update();
 
 	// #ifdef _DEBUG
@@ -188,75 +195,6 @@ void GameScene::Draw() {
 #pragma endregion
 }
 
-void GameScene::CheckAllCollisions() {
-	// 判定対象AとBの座標
-	Vector3 posA, posB;
-
-	// 自弾リストの取得
-	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
-	// 敵弾リストの取得
-	// const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullets();
-
-#pragma region 自キャラと敵弾
-	posA = player_->GetWorldPosition();
-
-	for (EnemyBullet* bullet : enemyBullets_) {
-		posB = bullet->GetWorldPosition();
-
-		float judge = (posB.x - posA.x) * (posB.x - posA.x) +
-		              (posB.y - posA.y) * (posB.y - posA.y) + (posB.z - posA.z) * (posB.z - posA.z);
-
-		float playerRad = 2.5f;
-		float enemyRad = 2.5f;
-		if (judge <= (playerRad + enemyRad) * (playerRad + enemyRad)) {
-			player_->OnCollision();
-			bullet->OnCollision();
-		}
-	}
-#pragma endregion
-
-#pragma region 自弾と敵キャラ
-
-	for (PlayerBullet* playerBullet : playerBullets) {
-		posB = playerBullet->GetWorldPosition();
-		for (EnemyBullet* enemyBullet : enemyBullets_) {
-			posA = enemyBullet->GetWorldPosition();
-
-			float judge = (posB.x - posA.x) * (posB.x - posA.x) +
-			              (posB.y - posA.y) * (posB.y - posA.y) +
-			              (posB.z - posA.z) * (posB.z - posA.z);
-
-			float playerRad = 2.5f;
-			float enemyRad = 2.5f;
-			if (judge <= (playerRad + enemyRad) * (playerRad + enemyRad)) {
-				playerBullet->OnCollision();
-				enemyBullet->OnCollision();
-			}
-		}
-	}
-#pragma endregion
-
-#pragma region 自弾と敵キャラ
-	for (Enemy* enemy : enemys_) {
-		posB = enemy->GetWorldPosition();
-
-		for (PlayerBullet* bullet : playerBullets) {
-			posA = bullet->GetWorldPosition();
-
-			float judge = (posB.x - posA.x) * (posB.x - posA.x) +
-			              (posB.y - posA.y) * (posB.y - posA.y) +
-			              (posB.z - posA.z) * (posB.z - posA.z);
-
-			float playerRad = 2.5f;
-			float enemyRad = 2.5f;
-			if (judge <= (playerRad + enemyRad) * (playerRad + enemyRad)) {
-				player_->OnCollision();
-				bullet->OnCollision();
-			}
-		}
-	}
-#pragma endregion
-}
 
 void GameScene::AddEnemyBullet(EnemyBullet* enemyBullet) {
 	// リストに登録する
@@ -326,3 +264,4 @@ void GameScene::UpDateEnemyPopCommands() {
 		}
 	}
 }
+

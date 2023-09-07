@@ -1,6 +1,7 @@
 ﻿#include "EnemyBullet.h"
 #include "newMath.h"
 #include <assert.h>
+#include "CollisionConfig.h"
 
 void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
 
@@ -15,10 +16,13 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 	worldTransform_.translation_ = position;
 	// 引数で受け取った速度をメンバに代入
 	velocity_ = velocity;
+
+	SetCollisionAttribute(kCollisionAttributeEnemy);
+	SetCollisionMask(~kCollisionAttributeEnemy);
 }
 
 Vector3 EnemyBullet::GetWorldPosition() {
-	Vector3 worldPos;
+	Vector3 worldPos = {};
 
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
