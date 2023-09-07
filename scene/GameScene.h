@@ -14,6 +14,7 @@
 #include <RailCamera.h>
 #include <Skydome.h>
 #include <sstream>
+#include "TimedCall.h"
 
 /// <summary>
 /// ゲームシーン
@@ -46,6 +47,8 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	void Attack();
+
 	/// <summary>
 	/// 衝突判定と応答
 	/// </summary>
@@ -61,6 +64,8 @@ public: // メンバ関数
 	void LoadEnemyPopData();
 
 	void UpDateEnemyPopCommands();
+
+	void Fire();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -90,12 +95,19 @@ private: // メンバ変数
 	DebugCamera* debugCamera_ = nullptr;
 	// Enemy* enemy_ = nullptr;
 
+
+	// 次元発動のリスト
+	std::list<TimedCall*> timedCalls_;
+
+
 	std::list<EnemyBullet*> enemyBullets_;
 	std::list<Enemy*> enemys_;
 
 	std::stringstream enemyPopCommands;
 	bool isWait_ = false;
 	int32_t waitTimer_ = 0;
+
+	
 
 	/// <summary>
 	/// ゲームシーン用
