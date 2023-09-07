@@ -39,6 +39,11 @@ int GetRandom(int min, int max) {
 //	return min + (float)(rand() * (max - min + 1.0f) / (1.0f + RAND_MAX));
 //}
 
+Vector3 Add(const Vector3& v, float num) {
+	Vector3 result = { v.x + num,v.y + num,v.z + num };
+	return result;
+}
+
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	Vector3 num = { v1.x + v2.x, v1.y + v2.y, v1.z + v2.z };
 	return num;
@@ -443,6 +448,12 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
 	result.y /= w;
 	result.z /= w;
 	return result;
+}
+
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
+	t = Clamp(t, 0.0f, 1.0f);
+
+	return Add(t,v1)
 }
 
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
