@@ -4,7 +4,6 @@
 #include "EnemyStateEntry.h"
 #include "EnemyStateApproach.h"
 #include "EnemyStateLeave.h"
-#include "GameScene.h"
 #include "MT.h"
 #include "Model.h"
 #include "Player.h"
@@ -21,6 +20,7 @@ class GameScene;
 class Enemy;
 class IEnemyState;
 
+class GameScene;
 /**
 enum class Phase {
 	Approach,
@@ -67,9 +67,6 @@ public:
 	void SetPosition(Vector3 speed);
 
 	// 攻撃
-	void Attack();
-
-	void Fire();
 
 	void SetPlayer(Player* player) { player_ = player; }
 
@@ -95,6 +92,9 @@ public:
 
 	bool GetIsAlive() { return isAlive_; }
 
+	void Attack();
+
+	void Fire();
 private:
 	WorldTransform worldTransform_;
 	Model* model_;

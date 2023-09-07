@@ -74,18 +74,16 @@ void GameScene::Update() {
 
 	UpDateEnemyPopCommands();
 
+	for (Enemy* enemy : enemys_) {
+		enemy->Update();
+	}
 	enemys_.remove_if([](Enemy* enemy) {
-		if (enemy->GetIsAlive()) {
+		if (!enemy->GetIsAlive()) {
 			delete enemy;
 			return true;
 		}
 		return false;
 	});
-
-	for (Enemy* enemy : enemys_) {
-		enemy->Update();
-	}
-
 	enemyBullets_.remove_if([](EnemyBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
@@ -157,6 +155,11 @@ void GameScene::Update() {
 	// #endif
 
 	// debugCamera_->Update();
+
+	ImGui::Begin("waitTime");
+	ImGui::Text("%d", waitTimer_);
+	ImGui::End();
+
 }
 
 void GameScene::Draw() {
@@ -301,7 +304,8 @@ void GameScene::EnemyIni(Model* model, const Vector3 position) {
 	Enemy* newEnemy = new Enemy();
 	newEnemy->Initialize(model, position);
 	newEnemy->SetPlayer(player_);
-	AddEnemy(newEnemy);
+	newEnemy->SetGameScene(this);
+	enemys_.push_back(newEnemy);
 }
 
 void GameScene::LoadEnemyPopData() {
@@ -359,41 +363,4 @@ void GameScene::UpDateEnemyPopCommands() {
 	}
 }
 
-void GameScene::Fire() {
 
-	Attack();
-
-	timedCalls_.push_back(new TimedCall(std::bind(&GameScene::Fire, this), 60));
-}
-
-void GameScene::Attack() {
-	assert(player_);
-
-		// 弾の速度
-		const float kBulletSpeed = 1.0f;
-
-		
-	    for (Enemy* enemy : enemys_) {
-		Vector3 plaPos = player_->GetWorldPosition();
-		Vector3 enePos = enemy->GetWorldPosition();
-		Vector3 speed;
-		speed.x = plaPos.x - enePos.x;
-		speed.y = plaPos.y - enePos.y;
-		speed.z = plaPos.z - enePos.z;
-		speed = Math::Normalize(speed);
-		speed.x *= kBulletSpeed;
-		speed.y *= kBulletSpeed;
-		speed.z *= kBulletSpeed;
-
-		speed = Math::TransformNormal(speed, worldTransform_.matWorld_);
-
-		EnemyBullet* newBullet = new EnemyBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_, speed);
-		// 弾を登録
-		// bullet_ = newBullet;
-		enemyBullets_.push_back(newBullet);
-		}
-		
-
-
-}

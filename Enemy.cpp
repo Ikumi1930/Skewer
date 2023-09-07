@@ -1,6 +1,7 @@
 ﻿#include "Enemy.h"
 #include "Player.h"
 #include <assert.h>
+#include "GameScene.h"
 
 Enemy::~Enemy() {
 
@@ -75,6 +76,10 @@ void Enemy::Update() {
 	worldTransform_.UpdateMatrix();
 	worldTransform_.TransferMatrix();
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
+
+	ImGui::Begin("enemyPos");
+	ImGui::Text("%f,%f,%f", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);
+	ImGui::End();
 }
 
 
@@ -110,4 +115,40 @@ bool Enemy::IsLeaveChangeStatePosition() {
 	} else {
 		return false;
 	}
+}
+
+void Enemy::OnCollision() {
+
+}
+
+void Enemy::Fire() {
+
+	Attack();
+
+	timedCall_.push_back(new TimedCall(std::bind(&Enemy::Fire, this), 60));
+}
+
+void Enemy::Attack() {
+	assert(player_);
+
+	// 弾の速度
+	const float kBulletSpeed = 1.0f;
+	Vector3 plaPos = player_->GetWorldPosition();
+	Vector3 enePos = GetWorldPosition();
+	Vector3 speed = {};
+	speed.x = plaPos.x - enePos.x;
+	speed.y = plaPos.y - enePos.y;
+	speed.z = plaPos.z - enePos.z;
+	speed = Math::Normalize(speed);
+	speed.x *= kBulletSpeed;
+	speed.y *= kBulletSpeed;
+	speed.z *= kBulletSpeed;
+
+	speed = Math::TransformNormal(speed, worldTransform_.matWorld_);
+
+	EnemyBullet* newBullet = new EnemyBullet();
+	newBullet->Initialize(model_, worldTransform_.translation_, speed);
+	// 弾を登録
+	// bullet_ = newBullet;
+	gameScene_->AddEnemyBullet(newBullet);
 }
