@@ -3,6 +3,7 @@
 #include <Vector2.h>
 #include <Vector3.h>
 #include <time.h>
+#include "DirectXCommon.h"
 
 int GetRandom(int min, int max);
 
@@ -10,7 +11,7 @@ int GetRandom(int min, int max);
 
 float Clamp(float number, float min, float max);
 
-Vector3 Add(const Vector3& v, float num);
+Vector3 Add(float num, const Vector3& v);
 
 // 加算
 Vector3 Add(const Vector3& v1, const Vector3& v2);
@@ -77,6 +78,10 @@ Vector3 Multyply(const Vector3& v, const Matrix4x4& m);
 
 Vector3 Transform(const Vector3& num, const Matrix4x4& m);
 
-Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+//Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
+
+Vector3 CatmullRom(const Vector3& P0, const Vector3& P1, const Vector3& P2, const Vector3& P3, float t);
+
+Vector3 CatmullRom(const std::vector<Vector3>& controlPoints, float t);

@@ -4,6 +4,7 @@
 #include <cassert>
 #include <fstream>
 
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
@@ -29,6 +30,8 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+	primitiveDrawer_ = PrimitiveDrawer::GetInstance();
+
 	// テクスチャを読み込み
 	textureHandle_ = TextureManager::Load("SusumePlayer1.png");
 	// 3Dモデルの生成
@@ -71,9 +74,55 @@ void GameScene::Initialize() {
 	for (Enemy* enemy : enemys_) {
 		collisionManager_->SetEnemy(enemy);
 	}
+
+	controlPoints_ = {
+		{0,0,0},
+		{10,10,0},
+		{10,15,0},
+		{20,15,0},
+		{20,15,0},
+		{20,0,0},
+		{30,0,0}
+	};
+
+	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
+
+	targetT_ = 1.0f / segmentCount;
+}
+
+void GameScene::UpdatePlayerPosition(float t) {
+	Vector3 cameraPosition{};
+	cameraPosition = CatmullRom(controlPoints_, t);
+	railCamera_->SetPosition(cameraPosition);
 }
 
 void GameScene::Update() {
+	
+
+	for (size_t i = 0; i < segmentCount + 1; i++) {
+		float t = 1.0f / segmentCount * i;
+		Vector3 pos = CatmullRom(controlPoints_, t);
+		pointsDrawing_.push_back(pos);
+	}
+
+	// カメラの移動
+	if (t_ < 0.99f) {
+		t_ += 1.0f / segmentCount / 10;
+	}
+	else {
+		t_ = 0.99f;
+	}
+	if (targetT_ < 0.99f) {
+		targetT_ += 1.0f / segmentCount / 10;
+	}
+	else {
+		targetT_ = 1.0f;
+	}
+	target_ = CatmullRom(controlPoints_, targetT_);
+	UpdatePlayerPosition(t_);
+
+
+
 	// 自キャラの更新
 
 	player_->Update(viewProjection_);
@@ -134,6 +183,11 @@ void GameScene::Update() {
 	// #endif
 
 	// debugCamera_->Update();
+
+	// 軸方向の表示を有効
+	AxisIndicator::GetInstance()->SetVisible(true);
+	// 軸方向表示が参照するビュープロジェクションを指定
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 }
 
 void GameScene::Draw() {
@@ -174,6 +228,12 @@ void GameScene::Draw() {
 	}
 
 	skydome_->Draw(viewProjection_);
+
+	// 3Dライン
+	for (int i = 0; i < segmentCount - 1; i++) {
+		PrimitiveDrawer::GetInstance()->DrawLine3d(
+			pointsDrawing_[i], pointsDrawing_[i + 1], { 1.0f, 0.0f, 0.0f, 1.0f });
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

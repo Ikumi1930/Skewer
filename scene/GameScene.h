@@ -17,6 +17,7 @@
 #include "Collider.h"
 #include "MT.h"
 #include "CollisionManager.h"
+#include "PrimitiveDrawer.h"
 
 /// <summary>
 /// ゲームシーン
@@ -59,6 +60,8 @@ public: // メンバ関数
 
 	void UpDateEnemyPopCommands();
 
+	void UpdatePlayerPosition(float t);
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -95,4 +98,18 @@ private: // メンバ変数
 	int32_t waitTimer_ = 0;
 
 	CollisionManager* collisionManager_;
+
+	PrimitiveDrawer* primitiveDrawer_ = nullptr;
+
+	std::vector<Vector3> controlPoints_;
+
+	std::vector<Vector3> pointsDrawing_;
+
+	const size_t segmentCount = 100;
+
+	Vector3 target_;
+
+	float t_;
+
+	float targetT_;
 };
