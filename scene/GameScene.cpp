@@ -63,6 +63,8 @@ void GameScene::Initialize() {
 	// TextureManager::Load("beam.png");
 
 	LoadEnemyPopData();
+
+	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
 }
 
 void GameScene::Update() {
