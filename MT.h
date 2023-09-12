@@ -78,7 +78,7 @@ Vector3 Multyply(const Vector3& v, const Matrix4x4& m);
 
 Vector3 Transform(const Vector3& num, const Matrix4x4& m);
 
-//Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
 

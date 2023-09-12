@@ -7,7 +7,7 @@
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	worldTransform_.scale_ = {300.0f, 300.0f, 300.0f};
+	worldTransform_.scale_ = {3000.0f, 3000.0f, 3000.0f};
 }
 
 void Skydome::Update() { worldTransform_.UpdateMatrix(); }

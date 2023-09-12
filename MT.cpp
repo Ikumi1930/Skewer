@@ -450,11 +450,14 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
 	return result;
 }
 
-//Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
-//	t = Clamp(t, 0.0f, 1.0f);
-//
-//	return Add(t, v1);
-//}
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
+	t = Clamp(t, 0.0f, 1.0f);
+	Vector3 result = {};
+	result.x = v1.x + t * (v2.x - v1.x);
+	result.y = v1.y + t * (v2.y - v1.y);
+	result.z = v1.z + t * (v2.z - v1.z);
+	return result;
+}
 
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
 	float dot = Dot(v1, v2);
@@ -482,7 +485,7 @@ Vector3 CatmullRom(const Vector3& P0, const Vector3& P1, const Vector3& P2, cons
 	float t2 = t * t;
 	float t3 = t2 * t;
 
-	Vector3 Q;
+	Vector3 Q = {};
 	Q.x = 0.5f * ((-t3 + 2.0f * t2 - t) * P0.x + (3.0f * t3 - 5.0f * t2 + 2.0f) * P1.x + (-3.0f * t3 + 4.0f * t2 + t) * P2.x + (t3 - t2) * P3.x);
 	Q.y = 0.5f * ((-t3 + 2.0f * t2 - t) * P0.y + (3.0f * t3 - 5.0f * t2 + 2.0f) * P1.y + (-3.0f * t3 + 4.0f * t2 + t) * P2.y + (t3 - t2) * P3.y);
 	Q.z = 0.5f * ((-t3 + 2.0f * t2 - t) * P0.z + (3.0f * t3 - 5.0f * t2 + 2.0f) * P1.z + (-3.0f * t3 + 4.0f * t2 + t) * P2.z + (t3 - t2) * P3.z);
@@ -494,7 +497,7 @@ Vector3 CatmullRom(const std::vector<Vector3>& controlPoints, float t) {
 	float t2 = t * t;
 	float t3 = t2 * t;
 
-	Vector3 Q;
+	Vector3 Q = {};
 	Q.x = 0.5f * ((-t3 + 2.0f * t2 - t) * controlPoints[0].x + (3.0f * t3 - 5.0f * t2 + 2.0f) * controlPoints[1].x + (-3.0f * t3 + 4.0f * t2 + t) * controlPoints[2].x + (t3 - t2) * controlPoints[3].x);
 	Q.y = 0.5f * ((-t3 + 2.0f * t2 - t) * controlPoints[0].y + (3.0f * t3 - 5.0f * t2 + 2.0f) * controlPoints[1].y + (-3.0f * t3 + 4.0f * t2 + t) * controlPoints[2].y + (t3 - t2) * controlPoints[3].y);
 	Q.z = 0.5f * ((-t3 + 2.0f * t2 - t) * controlPoints[0].z + (3.0f * t3 - 5.0f * t2 + 2.0f) * controlPoints[1].z + (-3.0f * t3 + 4.0f * t2 + t) * controlPoints[2].z + (t3 - t2) * controlPoints[3].z);

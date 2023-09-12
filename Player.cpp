@@ -87,7 +87,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 void Player::OnCollision() {}
 
 Vector3 Player::GetWorldPosition() {
-	Vector3 worldPos;
+	Vector3 worldPos = {};
 
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
@@ -273,7 +273,7 @@ void Player::MouseUpdate(ViewProjection& view) {
 	posNear = Math::TransformCoord(posNear, matInverseVPV);
 	posFar = Math::TransformCoord(posFar, matInverseVPV);
 
-	Vector3 mouseDirection;
+	Vector3 mouseDirection = {};
 	mouseDirection.x = posFar.x - posNear.x;
 	mouseDirection.y = posFar.y - posNear.y;
 	mouseDirection.z = posFar.z - posNear.z;

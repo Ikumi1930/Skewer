@@ -87,6 +87,7 @@ void GameScene::Initialize() {
 
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
 
+	t_ = 0;
 	targetT_ = 1.0f / segmentCount;
 }
 
@@ -231,8 +232,7 @@ void GameScene::Draw() {
 
 	// 3Dライン
 	for (int i = 0; i < segmentCount - 1; i++) {
-		PrimitiveDrawer::GetInstance()->DrawLine3d(
-			pointsDrawing_[i], pointsDrawing_[i + 1], { 1.0f, 0.0f, 0.0f, 1.0f });
+		PrimitiveDrawer::GetInstance()->DrawLine3d(pointsDrawing_[i], pointsDrawing_[static_cast<std::vector<Vector3, std::allocator<Vector3>>::size_type>(i) + 1], { 1.0f, 0.0f, 0.0f, 1.0f });
 	}
 
 	// 3Dオブジェクト描画後処理
