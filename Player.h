@@ -47,6 +47,8 @@ public:
 	// デストラクタ
 	~Player();
 
+	//Vector3 GetReticleWorldPosition();
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
