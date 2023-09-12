@@ -63,6 +63,8 @@ void GameScene::Initialize() {
 	// TextureManager::Load("beam.png");
 
 	LoadEnemyPopData();
+
+	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
 }
 
 void GameScene::Update() {
@@ -74,18 +76,16 @@ void GameScene::Update() {
 
 	UpDateEnemyPopCommands();
 
+	for (Enemy* enemy : enemys_) {
+		enemy->Update();
+	}
 	enemys_.remove_if([](Enemy* enemy) {
-		if (enemy->IsDead()) {
+		if (!enemy->GetIsAlive()) {
 			delete enemy;
 			return true;
 		}
 		return false;
 	});
-
-	for (Enemy* enemy : enemys_) {
-		enemy->Update();
-	}
-
 	enemyBullets_.remove_if([](EnemyBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
@@ -97,6 +97,36 @@ void GameScene::Update() {
 	for (EnemyBullet* bullet : enemyBullets_) {
 		bullet->Update();
 	}
+
+	// デスフラグの立った球を削除
+	enemyBullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
+	// Attack();
+
+	timedCalls_.remove_if([](TimedCall* timedCall) {
+		if (timedCall->IsFinished()) {
+			delete timedCall;
+			return false;
+		}
+		return true;
+	});
+
+	for (TimedCall* timedCalls : timedCalls_) {
+		timedCalls->Update();
+	}
+
+	// 弾更新
+	for (EnemyBullet* bullet : enemyBullets_) {
+		bullet->Update();
+	}
+
+
 
 	CheckAllCollisions();
 
@@ -127,6 +157,10 @@ void GameScene::Update() {
 	// #endif
 
 	// debugCamera_->Update();
+
+	ImGui::Begin("waitTime");
+	ImGui::Text("%d", waitTimer_);
+	ImGui::End();
 }
 
 void GameScene::Draw() {
@@ -267,9 +301,10 @@ void GameScene::AddEnemy(Enemy* enemy) { enemys_.push_back(enemy); }
 
 void GameScene::EnemyIni(Model* model, const Vector3 position) {
 	Enemy* newEnemy = new Enemy();
-	newEnemy->Initialize(model, position, this);
+	newEnemy->Initialize(model, position);
 	newEnemy->SetPlayer(player_);
-	AddEnemy(newEnemy);
+	newEnemy->SetGameScene(this);
+	enemys_.push_back(newEnemy);
 }
 
 void GameScene::LoadEnemyPopData() {
@@ -326,3 +361,5 @@ void GameScene::UpDateEnemyPopCommands() {
 		}
 	}
 }
+
+
