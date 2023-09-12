@@ -1,6 +1,9 @@
 ﻿#pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "MT.h"
+
+class Player;
 
 class PlayerBullet {
 public:
@@ -24,9 +27,19 @@ private:
 	Vector3 velocity_;
 	// Vector3 Add(Vector3& a, Vector3& b);
 
-	static const int32_t kLifeTime = 60;
+	static const int32_t kLifeTime = 10;
 	// デスタイマー
 	int32_t deathtimer_ = kLifeTime;
 	// デスフラグ
 	bool isDead_ = false;
+
+	AABB laser_;
+
+	Player* player_;
+
+	float velocityXZ_ = 0;
+
+	float speed_;
+
+	float t_;
 };

@@ -1,8 +1,14 @@
 ﻿#pragma once
 #include "EnemyBullet.h"
+#include "IEnemyState.h"
+#include "EnemyStateEntry.h"
+#include "EnemyStateApproach.h"
+#include "EnemyStateLeave.h"
+#include "MT.h"
 #include "Model.h"
 #include "Player.h"
 #include "TimedCall.h"
+#include "Vector3.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "newMath.h"
@@ -12,7 +18,10 @@ class Player;
 class GameScene;
 
 class Enemy;
+class IEnemyState;
 
+class GameScene;
+/**
 enum class Phase {
 	Approach,
 	Leave,
@@ -39,28 +48,25 @@ class EnemyStateLeave : public EnemyState {
 public:
 	void Update();
 };
-
+**/
 class Enemy {
 
 public:
 	~Enemy();
 
-	void Initialize(Model* model, const Vector3& position, GameScene* gameScene);
+	void Initialize(Model* model, const Vector3& position);
 
 	void Update();
 
 	void Draw(const ViewProjection& view);
 
-	void ChangeState(EnemyState* newEnemyState);
+	void ChangeState(IEnemyState* newEnemyState);
 
 	WorldTransform GetWT() { return worldTransform_; }
 
 	void SetPosition(Vector3 speed);
 
 	// 攻撃
-	void Attack();
-
-	void Fire();
 
 	void SetPlayer(Player* player) { player_ = player; }
 
@@ -76,16 +82,28 @@ public:
 
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
+	void ChangePosition(Vector3 vector);
+
+	bool isFire;
+
+	bool IsLeaveChangeStatePosition();
+
+	bool IsApproachChangeStatePosition();
+
+	bool GetIsAlive() { return isAlive_; }
+
+	void Attack();
+
+	void Fire();
 private:
 	WorldTransform worldTransform_;
 	Model* model_;
 	uint32_t texturehandle_;
 
-	Phase phase_ = Phase::Approach;
 
 	Player* player_ = nullptr;
 
-	EnemyState* state;
+	IEnemyState* state;
 
 	GameScene* gameScene_ = nullptr;
 
@@ -97,4 +115,6 @@ private:
 	int timer = 0;
 
 	bool isDead_ = false;
+
+	bool isAlive_;
 };

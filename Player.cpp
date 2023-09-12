@@ -30,28 +30,33 @@ void Player::Attack() {
 	}
 
 	if (isAttack) {
+		// 弾の速度
+		const float kBulletSpeed = 20.0f;
+		// Vector3 velocity(0, 0, kBulletSpeed);
+		Vector3 velocity = {};
+		Vector3 Reticle3DPos = {};
+		Reticle3DPos.x = worldTransform3DReticle_.matWorld_.m[3][0];
+		Reticle3DPos.y = worldTransform3DReticle_.matWorld_.m[3][1];
+		Reticle3DPos.z = worldTransform3DReticle_.matWorld_.m[3][2];
+
+		// velocity = Math::TransformNormal(velocity, worldTransform_.matWorld_);
+
+		velocity.x = Reticle3DPos.x - worldTransform_.matWorld_.m[3][0];
+		velocity.y = Reticle3DPos.y - worldTransform_.matWorld_.m[3][1];
+		velocity.z = Reticle3DPos.z - worldTransform_.matWorld_.m[3][2];
+		velocity = Math::FVMultiply(kBulletSpeed, Math::Normalize(velocity));
+
+		// 速度ベクトルを自機の向きに合わせて回転させる
+		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, GetWorldPosition(), velocity);
+		// 弾を登録
+		// bullet_ = newBullet;
+		bullets_.push_back(newBullet);
+		count++;
 		if (count == 0) {
-			// 弾の速度
-			const float kBulletSpeed = 1.0f;
-			// Vector3 velocity(0, 0, kBulletSpeed);
-			Vector3 velocity;
-			Vector3 Reticle3DPos;
-			Reticle3DPos.x = worldTransform3DReticle_.matWorld_.m[3][0];
-			Reticle3DPos.y = worldTransform3DReticle_.matWorld_.m[3][1];
-			Reticle3DPos.z = worldTransform3DReticle_.matWorld_.m[3][2];
-			// velocity = Math::TransformNormal(velocity, worldTransform_.matWorld_);
-
-			velocity.x = Reticle3DPos.x - worldTransform_.matWorld_.m[3][0];
-			velocity.y = Reticle3DPos.y - worldTransform_.matWorld_.m[3][1];
-			velocity.z = Reticle3DPos.z - worldTransform_.matWorld_.m[3][2];
-			velocity = Math::FVMultiply(kBulletSpeed, Math::Normalize(velocity));
-
-			PlayerBullet* newBullet = new PlayerBullet();
-			newBullet->Initialize(model_, GetWorldPosition(), velocity);
-			// 弾を登録
-			// bullet_ = newBullet;
-			bullets_.push_back(newBullet);
-			count++;
+			
 		}
 	} else {
 		count = 0;
@@ -83,7 +88,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 void Player::OnCollision() {}
 
 Vector3 Player::GetWorldPosition() {
-	Vector3 worldPos;
+	Vector3 worldPos = {};
 
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
@@ -91,6 +96,16 @@ Vector3 Player::GetWorldPosition() {
 
 	return worldPos;
 }
+
+//Vector3 Player::GetReticleWorldPosition() {
+//	Vector3 worldPos = {};
+//
+//	worldPos.x = worldTransform3DReticle_.matWorld_.m[3][0];
+//	worldPos.y = worldTransform3DReticle_.matWorld_.m[3][1];
+//	worldPos.z = worldTransform3DReticle_.matWorld_.m[3][2];
+//
+//	return worldPos;
+//}
 
 void Player::Update(ViewProjection& viewProjection) {
 	XINPUT_STATE joyState;
@@ -297,3 +312,4 @@ void Player::MouseUpdate(ViewProjection& view) {
 }
 
 void Player::SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
+

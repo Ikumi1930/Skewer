@@ -47,6 +47,8 @@ public:
 	// デストラクタ
 	~Player();
 
+	//Vector3 GetReticleWorldPosition();
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -71,4 +73,6 @@ private:
 	WorldTransform worldTransform3DReticle_;
 
 	Sprite* sprite2DReticle_ = nullptr;
+
+	
 };
