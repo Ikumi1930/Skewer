@@ -3,6 +3,7 @@
 #include <Vector2.h>
 #include <Vector3.h>
 #include <time.h>
+#include <algorithm>
 
 int GetRandom(int min, int max);
 
@@ -76,3 +77,21 @@ Vector3 Multyply(const Vector3& v, const Matrix4x4& m);
 Vector3 Transform(const Vector3& num, const Matrix4x4& m);
 
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
+
+struct AABB
+{
+	Vector3 min; //!< 最小点
+	Vector3 max; //!< 最大点
+};
+
+struct Sphere
+{
+	Vector3 center;
+	float radius;
+};
+
+bool IsCollision(const AABB& aabb1, const AABB& aabb2);
+
+void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);
+
+bool IsCollision(const AABB& aabb, const Sphere& sphere);
