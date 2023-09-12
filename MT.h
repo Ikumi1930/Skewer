@@ -2,8 +2,11 @@
 #include <Matrix4x4.h>
 #include <Vector2.h>
 #include <Vector3.h>
+#include <Vector4.h>
 #include <time.h>
 #include <algorithm>
+
+#define M_PI 3.14f
 
 
 int GetRandom(int min, int max);
@@ -91,8 +94,11 @@ struct Sphere
 	float radius;
 };
 
+void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, Vector4 color);
+
 bool IsCollision(const AABB& aabb1, const AABB& aabb2);
 
-void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);
+void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, Vector4 color);
 
 bool IsCollision(const AABB& aabb, const Sphere& sphere);
+

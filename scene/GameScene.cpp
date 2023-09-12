@@ -161,7 +161,6 @@ void GameScene::Update() {
 	ImGui::Begin("waitTime");
 	ImGui::Text("%d", waitTimer_);
 	ImGui::End();
-
 }
 
 void GameScene::Draw() {
@@ -202,8 +201,6 @@ void GameScene::Draw() {
 	}
 
 	skydome_->Draw(viewProjection_);
-
-
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "MT.h"
 
 class PlayerBullet {
 public:
@@ -29,4 +30,6 @@ private:
 	int32_t deathtimer_ = kLifeTime;
 	// デスフラグ
 	bool isDead_ = false;
+
+	AABB laser;
 };

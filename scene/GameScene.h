@@ -109,6 +109,14 @@ private: // メンバ変数
 
 	PrimitiveDrawer* primitiveDrawer_ = nullptr;
 
+
+	Sphere sphere1;
+	AABB aabb1;
+
+	Vector4 color;
+
+	Matrix4x4 viewprojectionMatrix;
+	Matrix4x4 viewportMatrix;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

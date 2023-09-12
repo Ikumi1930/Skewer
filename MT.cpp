@@ -3,9 +3,9 @@
 #include <assert.h>
 #include <cmath>
 #include <math.h>
-#include "PrimitiveDrawer.h"
+#include "3d/PrimitiveDrawer.h"
 
-
+PrimitiveDrawer* primitiveDrawer = nullptr;
 
 float Clamp(float number, float min, float max) {
 	if (min > number) {
@@ -463,7 +463,91 @@ Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
 	};
 }
 
-void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
+void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, Vector4 color) {
+	const uint32_t kSubdivision = 16;
+	const float kLonEvery = (2 * M_PI) / kSubdivision;
+	const float kLatEvery = (M_PI) / kSubdivision;
+	//緯度の方向に分割 -π/1 ～ π/2
+	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex) {
+		float lat = -M_PI / 2.0f + kLatEvery * latIndex; //現在の緯度
+		//経度の方向に分割 0～2π
+		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
+			float lon = lonIndex * kLonEvery;
+			//world座標系でのa, b, cを求める
+			Vector3 a, b, c;
+			a = { std::cos(lat) * std::cos(lon),
+				std::sin(lat),
+				std::cos(lat) * std::sin(lon) };
+
+			b = { std::cos(lat + kLatEvery) * std::cos(lon),
+				std::sin(lat + kLatEvery),
+				std::cos(lat + kLatEvery) * std::sin(lon) };
+
+			c = { std::cos(lat) * std::cos(lon + kLonEvery),
+				std::sin(lat),
+				std::cos(lat) * std::sin(lon + kLonEvery) };
+
+			a.x *= sphere.radius;
+			a.y *= sphere.radius;
+			a.z *= sphere.radius;
+
+			b.x *= sphere.radius;
+			b.y *= sphere.radius;
+			b.z *= sphere.radius;
+
+			c.x *= sphere.radius;
+			c.y *= sphere.radius;
+			c.z *= sphere.radius;
+
+			a.x += sphere.center.x;
+			a.y += sphere.center.y;
+			a.z += sphere.center.z;
+
+			b.x += sphere.center.x;
+			b.y += sphere.center.y;
+			b.z += sphere.center.z;
+
+			c.x += sphere.center.x;
+			c.y += sphere.center.y;
+			c.z += sphere.center.z;
+
+			Matrix4x4 worldMatrixA = MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, a);
+
+			Matrix4x4 worldViewProjectionMatrixA = Multiply(worldMatrixA, viewProjectionMatrix);
+
+			Matrix4x4 worldMatrixB = MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, b);
+
+			Matrix4x4 worldViewProjectionMatrixB = Multiply(worldMatrixB, viewProjectionMatrix);
+
+			Matrix4x4 worldMatrixC = MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, c);
+
+			Matrix4x4 worldViewProjectionMatrixC = Multiply(worldMatrixC, viewProjectionMatrix);
+
+			Vector3 screenVertices[3]{};
+
+			//NDCまで変換。Transformを使うと同時座標系->デカルト座標系の処理が行われ、結果的にZDvivideが行われることになる
+			Vector3 ndcVertexA = Transform({ 0, 0, 0 }, worldViewProjectionMatrixA);
+			//viewport変換を使ってScreen空間へ
+			screenVertices[0] = Transform(ndcVertexA, viewportMatrix);
+
+			//NDCまで変換。Transformを使うと同時座標系->デカルト座標系の処理が行われ、結果的にZDvivideが行われることになる
+			Vector3 ndcVertexB = Transform({ 0, 0, 0 }, worldViewProjectionMatrixB);
+			//viewport変換を使ってScreen空間へ
+			screenVertices[1] = Transform(ndcVertexB, viewportMatrix);
+
+			//NDCまで変換。Transformを使うと同時座標系->デカルト座標系の処理が行われ、結果的にZDvivideが行われることになる
+			Vector3 ndcVertexC = Transform({ 0, 0, 0 }, worldViewProjectionMatrixC);
+			//viewport変換を使ってScreen空間へ
+			screenVertices[2] = Transform(ndcVertexC, viewportMatrix);
+
+			primitiveDrawer->GetInstance()->DrawLine3d(screenVertices[0], screenVertices[1], color);
+
+			primitiveDrawer->GetInstance()->DrawLine3d(screenVertices[0], screenVertices[2], color);
+		}
+	}
+}
+
+void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, Vector4 color) {
 	Vector3 vers[8]{};
 	vers[0] = { aabb.min.x, aabb.min.y, aabb.min.z };
 	vers[1] = { aabb.min.x, aabb.min.y, aabb.max.z };
@@ -480,22 +564,22 @@ void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Mat
 		screenVers[i] = Transform(vers[i], viewportMatrix);
 	}
 
-	Novice::DrawLine(int(screenVers[0].x), int(screenVers[0].y), int(screenVers[1].x), int(screenVers[1].y), color);
-	Novice::DrawLine(int(screenVers[0].x), int(screenVers[0].y), int(screenVers[2].x), int(screenVers[2].y), color);
-	Novice::DrawLine(int(screenVers[0].x), int(screenVers[0].y), int(screenVers[3].x), int(screenVers[3].y), color);
+	primitiveDrawer->GetInstance()->DrawLine3d(screenVers[0], screenVers[1], color);
+	primitiveDrawer->GetInstance()->DrawLine3d(screenVers[0], screenVers[2], color);
+	primitiveDrawer->GetInstance()->DrawLine3d(screenVers[0], screenVers[3], color);
 
-	Novice::DrawLine(int(screenVers[1].x), int(screenVers[1].y), int(screenVers[5].x), int(screenVers[5].y), color);
-	Novice::DrawLine(int(screenVers[1].x), int(screenVers[1].y), int(screenVers[6].x), int(screenVers[6].y), color);
+	primitiveDrawer->GetInstance()->DrawLine3d(screenVers[1], screenVers[5], color);
+	primitiveDrawer->GetInstance()->DrawLine3d(screenVers[1], screenVers[6], color);
 
-	Novice::DrawLine(int(screenVers[2].x), int(screenVers[2].y), int(screenVers[4].x), int(screenVers[4].y), color);
-	Novice::DrawLine(int(screenVers[2].x), int(screenVers[2].y), int(screenVers[5].x), int(screenVers[5].y), color);
+	primitiveDrawer->GetInstance()->DrawLine3d(screenVers[2], screenVers[4], color);
+	primitiveDrawer->GetInstance()->DrawLine3d(screenVers[2], screenVers[5], color);
 
-	Novice::DrawLine(int(screenVers[3].x), int(screenVers[3].y), int(screenVers[4].x), int(screenVers[4].y), color);
-	Novice::DrawLine(int(screenVers[3].x), int(screenVers[3].y), int(screenVers[6].x), int(screenVers[6].y), color);
+	primitiveDrawer->GetInstance()->DrawLine3d(screenVers[3], screenVers[4], color);
+	primitiveDrawer->GetInstance()->DrawLine3d(screenVers[3], screenVers[4], color);
 
-	Novice::DrawLine(int(screenVers[4].x), int(screenVers[4].y), int(screenVers[7].x), int(screenVers[7].y), color);
-	Novice::DrawLine(int(screenVers[5].x), int(screenVers[5].y), int(screenVers[7].x), int(screenVers[7].y), color);
-	Novice::DrawLine(int(screenVers[6].x), int(screenVers[6].y), int(screenVers[7].x), int(screenVers[7].y), color);
+	primitiveDrawer->GetInstance()->DrawLine3d(screenVers[4], screenVers[7], color);
+	primitiveDrawer->GetInstance()->DrawLine3d(screenVers[5], screenVers[7], color);
+	primitiveDrawer->GetInstance()->DrawLine3d(screenVers[6], screenVers[7], color);
 
 }
 
