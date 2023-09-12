@@ -15,6 +15,7 @@
 #include <Skydome.h>
 #include <sstream>
 #include "TimedCall.h"
+#include "PrimitiveDrawer.h"
 
 /// <summary>
 /// ゲームシーン
@@ -106,7 +107,7 @@ private: // メンバ変数
 	bool isWait_ = false;
 	int32_t waitTimer_ = 0;
 
-	
+	PrimitiveDrawer* primitiveDrawer_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

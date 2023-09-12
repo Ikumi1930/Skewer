@@ -3,6 +3,9 @@
 #include <assert.h>
 #include <cmath>
 #include <math.h>
+#include "PrimitiveDrawer.h"
+
+
 
 float Clamp(float number, float min, float max) {
 	if (min > number) {

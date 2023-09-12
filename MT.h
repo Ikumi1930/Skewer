@@ -5,6 +5,7 @@
 #include <time.h>
 #include <algorithm>
 
+
 int GetRandom(int min, int max);
 
 // float GetRandom(float min, float max);
