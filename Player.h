@@ -49,6 +49,8 @@ public:
 
 	//Vector3 GetReticleWorldPosition();
 
+	bool GetIsAttack() { return isAttack; }
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;

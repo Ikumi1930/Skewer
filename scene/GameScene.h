@@ -65,12 +65,13 @@ public: // メンバ関数
 
 	void UpDateEnemyPopCommands();
 
-	
+	void PreInit();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+	Audio* audio2_ = nullptr;
 
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;
@@ -155,8 +156,8 @@ private: // メンバ変数
 	uint32_t voicePressHandle_ = 0;
 
 
-
-
+	bool isLoad = 0;
+	bool isSound = true;
 
 
 

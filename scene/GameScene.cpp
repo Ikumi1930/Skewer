@@ -28,6 +28,7 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+	audio2_ = Audio::GetInstance();
 
 	clearTexture_ = TextureManager::Load("clear.png");
 	titleTexture_ = TextureManager::Load("title.png");
@@ -88,22 +89,61 @@ void GameScene::Initialize() {
 	soundClearHandle_ = audio_->LoadWave("Clear.wav");
 	soundBeamHandle_ = audio_->LoadWave("Beam.wav");
 	soundPressHandle_ = audio_->LoadWave("Press.wav");
+	if (!isLoad) {
+		
+		isLoad = true;
+	}
+	
 
-	audio_->PlayWave(soundTitleHandle_);
+	/*audio_->PlayWave(soundTitleHandle_);
 	audio_->PlayWave(soundPlayHandle_);
 	audio_->PlayWave(soundClearHandle_);
 	audio_->PlayWave(soundBeamHandle_);
-	audio_->PlayWave(soundPressHandle_);
+	audio_->PlayWave(soundPressHandle_);*/
 
 	
-
+	
+	/*audio_->SetVolume(soundPlayHandle_, 0.1f);
+	audio_->SetVolume(soundClearHandle_, 0.1f);
+	audio_->SetVolume(soundBeamHandle_, 0.1f);
+	audio_->SetVolume(soundPressHandle_, 0.1f);*/
 
 	
-	voicePressHandle_ = audio_->PlayWave(soundPressHandle_, true);
+	//voicePressHandle_ = audio_->PlayWave(soundPressHandle_, true);
+	
+}
 
+void GameScene::PreInit() {
+	dxCommon_ = DirectXCommon::GetInstance();
+	input_ = Input::GetInstance();
+	audio_ = Audio::GetInstance();
+	audio2_ = Audio::GetInstance();
 
+	isWait_ = false;
+	waitTimer_ = 0;
+	enemyPopCommands = {};
 
+	worldTransform_.Initialize();
+	// ビュープロジェクションの初期化
+	viewProjection_.Initialize();
 
+	// 自キャラの初期化
+	player_->Initialize(model_, textureHandle_);
+
+	// 軸方向表示を有効にする
+	AxisIndicator::GetInstance()->SetVisible(true);
+	// アドレス渡し
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+
+	skydome_->Initialize(modelSkydome_, { 0, 80, 0 });
+
+	railCamera_->Initialize({ 0, 0, -100.0f }, player_->GetWorldMatrix().rotation_);
+
+	player_->SetParent(&railCamera_->GetWorldTransform());
+
+	LoadEnemyPopData();
+
+	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
 }
 
 void GameScene::Update() {
@@ -111,14 +151,40 @@ void GameScene::Update() {
 	if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
 		return;
 	}
+
 	switch (scene_)
 	{
 		// タイトルシーン
 	case 0:
-		voiceTitleHandle_ = audio_->PlayWave(soundTitleHandle_, true);
+		
+		
+		break;
+	case 1:
+		
+		/*if (player_->GetIsAttack()) {
+			audio_->PlayWave(soundBeamHandle_, false);
+			audio_->SetVolume(soundBeamHandle_, 0.1f);
+		}*/
+		
+		break;
+	case 2:
+		
+		
+		break;
+	}
+	switch (scene_)
+	{
+		// タイトルシーン
+	case 0:
+		if (isSound) {
+			audio_->StopWave(soundClearHandle_);
+			audio_->PlayWave(soundTitleHandle_, false, 0.1f);
+			isSound = false;
+		}
 
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A)
 		{
+			isSound = true;
 			scene_ = 1;
 		}
 		break;
@@ -126,9 +192,13 @@ void GameScene::Update() {
 		
 		// ゲームシーン
 	case 1:
-			voicePlayHandle_ = audio_->PlayWave(soundPlayHandle_, false);
-		
-			voiceBeamHandle_ = audio_->PlayWave(soundBeamHandle_, false);
+		audio_->StopWave(soundClearHandle_);
+		audio_->StopWave(soundTitleHandle_);
+		if (isSound) {
+			audio_->StopWave(soundTitleHandle_);
+			audio_->PlayWave(soundPlayHandle_, false, 0.1f);
+			isSound = false;
+		}
 
 		// 自キャラの更新
 		player_->Update(viewProjection_);
@@ -218,16 +288,25 @@ void GameScene::Update() {
 		--timer_;
 		if (timer_ < 0)
 		{
+			isSound = true;
 			scene_ = 2;
 		}
 		break;
 	case 2:
+		audio_->StopWave(soundTitleHandle_);
+		audio_->StopWave(soundPlayHandle_);
 		// クリアシーン
-		voiceClearHandle_ = audio_->PlayWave(soundClearHandle_, false);
+		if (isSound) {
+			audio_->StopWave(soundPlayHandle_);
+			audio_->PlayWave(soundClearHandle_, false, 0.1f);
+			isSound = false;
+		}
+		
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)
 		{
+			isSound = true;
 			scene_ = 0;
-			Initialize();
+			PreInit();
 			timer_ = 60 * 30;
 		}
 		break;
