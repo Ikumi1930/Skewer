@@ -31,8 +31,10 @@ void GameScene::Initialize() {
 
 	clearTexture_ = TextureManager::Load("clear.png");
 	titleTexture_ = TextureManager::Load("title.png");
+	UITexture_ = TextureManager::Load("UI.png");
 	titleSprite_ = Sprite::Create(titleTexture_, { 0, 0 });
 	clearSprite_ = Sprite::Create(clearTexture_, { 0, 0 });
+	UISprite_ = Sprite::Create(UITexture_, { 0, 0 });
 
 	isWait_ = false;
 	waitTimer_ = 0;
@@ -248,7 +250,7 @@ void GameScene::Draw() {
 		bullet->Draw(viewProjection_);
 	}
 
-	//skydome_->Draw(viewProjection_);
+	skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -262,6 +264,12 @@ void GameScene::Draw() {
 	{
 		// タイトル画面
 		titleSprite_->Draw();
+	}
+
+	if (scene_ == 1)
+	{
+		// ゲーム画面
+		UISprite_->Draw();
 	}
 
 	if (scene_ == 2)
