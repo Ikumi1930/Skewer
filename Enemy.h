@@ -15,6 +15,8 @@
 #include <list>
 #include "Particle.h"
 
+#define MAXPARTICLE 10
+
 class Player;
 class GameScene;
 
@@ -97,7 +99,7 @@ public:
 
 	void Fire();
 
-	void SpawnParticles();
+	//void SpawnParticles();
 private:
 	WorldTransform worldTransform_;
 	Model* model_;
@@ -123,5 +125,5 @@ private:
 
 	Vector3 adjustPosition_;
 
-	std::list<Particle*> particle_;
+	Particle* particle_[MAXPARTICLE];
 };

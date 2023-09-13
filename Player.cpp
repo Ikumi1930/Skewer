@@ -283,7 +283,7 @@ void Player::MouseUpdate(ViewProjection& view) {
 	mouseDirection.z = posFar.z - posNear.z;
 	mouseDirection = Math::Normalize(mouseDirection);
 
-	const float kDistanceTestObject = 100.0f;
+	const float kDistanceTestObject = 200.0f;
 	worldTransform3DReticle_.translation_.x =
 	    Math::FVMultiply(kDistanceTestObject, mouseDirection).x + posNear.x;
 	worldTransform3DReticle_.translation_.y =

@@ -1,5 +1,6 @@
 #include "Particle.h"
 #include <assert.h>
+#include "Enemy.h"
 
 void Particle::Initialize(Model* model, const Vector3& position) {
 
@@ -10,6 +11,7 @@ void Particle::Initialize(Model* model, const Vector3& position) {
 	worldTransform_.translation_ = position;
 	velocity_ = {(float)GetRandom(-2,2),(float)GetRandom(-2,2) ,(float)GetRandom(-2,2) };
 	acceleration_ = { 0.001f,0.001f,0.001f };
+	isDead_ = false;
 }
 
 void Particle::Update() {
