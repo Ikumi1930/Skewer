@@ -80,6 +80,28 @@ void GameScene::Initialize() {
 	LoadEnemyPopData();
 
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
+
+	soundTitleHandle_ = audio_->LoadWave("Title.wav");
+	soundPlayHandle_ = audio_->LoadWave("Play.wav");
+	soundClearHandle_ = audio_->LoadWave("Clear.wav");
+	soundBeamHandle_ = audio_->LoadWave("Beam.wav");
+	soundPressHandle_ = audio_->LoadWave("Press.wav");
+
+	audio_->PlayWave(soundTitleHandle_);
+	audio_->PlayWave(soundPlayHandle_);
+	audio_->PlayWave(soundClearHandle_);
+	audio_->PlayWave(soundBeamHandle_);
+	audio_->PlayWave(soundPressHandle_);
+
+	
+
+
+	
+	voicePressHandle_ = audio_->PlayWave(soundPressHandle_, true);
+
+
+
+
 }
 
 void GameScene::Update() {
@@ -91,6 +113,7 @@ void GameScene::Update() {
 	{
 		// タイトルシーン
 	case 0:
+		voiceTitleHandle_ = audio_->PlayWave(soundTitleHandle_, true);
 
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A)
 		{
@@ -98,8 +121,12 @@ void GameScene::Update() {
 		}
 		break;
 
+		
 		// ゲームシーン
 	case 1:
+			voicePlayHandle_ = audio_->PlayWave(soundPlayHandle_, false);
+		
+			voiceBeamHandle_ = audio_->PlayWave(soundBeamHandle_, false);
 
 		// 自キャラの更新
 		player_->Update(viewProjection_);
@@ -201,6 +228,7 @@ void GameScene::Update() {
 		break;
 	case 2:
 		// クリアシーン
+		voiceClearHandle_ = audio_->PlayWave(soundClearHandle_, false);
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)
 		{
 			scene_ = 0;

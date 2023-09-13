@@ -134,6 +134,28 @@ private: // メンバ変数
 	Matrix4x4 viewportMatrix;
 
 	int enemyKillCount;
+
+
+	uint32_t soundTitleHandle_ = 0;
+	uint32_t soundPlayHandle_ = 0;
+	uint32_t soundClearHandle_ = 0;
+	uint32_t soundBeamHandle_ = 0;
+	uint32_t soundPressHandle_ = 0;
+
+
+
+	uint32_t voiceTitleHandle_ = 0;
+	uint32_t voicePlayHandle_ = 0;
+	uint32_t voiceClearHandle_ = 0;
+	uint32_t voiceBeamHandle_ = 0;
+	uint32_t voicePressHandle_ = 0;
+
+
+
+
+
+
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
