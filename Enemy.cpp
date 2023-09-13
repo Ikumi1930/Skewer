@@ -82,9 +82,9 @@ void Enemy::Update() {
 	worldTransform_.TransferMatrix();
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 
-	ImGui::Begin("enemyPos");
+	/*ImGui::Begin("enemyPos");
 	ImGui::Text("%f,%f,%f", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);
-	ImGui::End();
+	ImGui::End();*/
 }
 
 
