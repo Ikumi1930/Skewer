@@ -20,7 +20,20 @@ Enemy::~Enemy() {
 }
 
 
-
+	if (timer < 0) {
+		// 弾の速度
+		const float kBulletSpeed = 1.0f;
+		
+		Vector3 plaPos = player_->GetWorldPosition();
+		Vector3 enePos = GetWorldPosition();
+		Vector3 speed;
+		speed.x = plaPos.x - enePos.x;
+		speed.y = plaPos.y - enePos.y;
+		speed.z = plaPos.z - enePos.z;
+		speed = Math::Normalize(speed);
+		speed.x *= kBulletSpeed;
+		speed.y *= kBulletSpeed;
+		speed.z *= kBulletSpeed;
 
 void Enemy::Initialize(Model* model, const Vector3& position) {
 

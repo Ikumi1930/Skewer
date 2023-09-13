@@ -10,6 +10,7 @@ GameScene::~GameScene() {
 	delete model_;
 	delete player_;
 	delete debugCamera_;
+	delete titleSprite_;
 	for (Enemy* enemy : enemys_) {
 		delete enemy;
 	}
@@ -27,6 +28,16 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+	clearTexture_ = TextureManager::Load("clear.png");
+	titleTexture_ = TextureManager::Load("title.png");
+	titleSprite_ = Sprite::Create(titleTexture_, { 0, 0 });
+	clearSprite_ = Sprite::Create(clearTexture_, { 0, 0 });
+
+	isWait_ = false;
+	waitTimer_ = 0;
+	enemyPopCommands = {};
+
 	// テクスチャを読み込み
 	textureHandle_ = TextureManager::Load("SusumePlayer1.png");
 	// 3Dモデルの生成
@@ -72,13 +83,30 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	// 自キャラの更新
+	XINPUT_STATE joyState;
+	if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
+		return;
+	}
+	switch (scene_)
+	{
+		// タイトルシーン
+	case 0:
 
-	player_->Update(viewProjection_);
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A)
+		{
+			scene_ = 1;
+		}
+		break;
 
-	// enemy_->Update();
+		// ゲームシーン
+	case 1:
 
-	UpDateEnemyPopCommands();
+		// 自キャラの更新
+		player_->Update(viewProjection_);
+
+		// enemy_->Update();
+
+		UpDateEnemyPopCommands();
 
 	for (Enemy* enemy : enemys_) {
 		enemy->Update();
@@ -134,37 +162,53 @@ void GameScene::Update() {
 
 	CheckAllCollisions();
 
-	skydome_->Update();
+		skydome_->Update();
 
-	// #ifdef _DEBUG
+		// #ifdef _DEBUG
 
-	if (input_->TriggerKey(DIK_RETURN) && isDebugCameraActive_ == false) {
-		isDebugCameraActive_ = true;
-	} else if (input_->TriggerKey(DIK_RETURN) && isDebugCameraActive_ == true) {
-		isDebugCameraActive_ = false;
+		if (input_->TriggerKey(DIK_RETURN) && isDebugCameraActive_ == false) {
+			isDebugCameraActive_ = true;
+		}
+		else if (input_->TriggerKey(DIK_RETURN) && isDebugCameraActive_ == true) {
+			isDebugCameraActive_ = false;
+		}
+		// カメラの処理
+		if (isDebugCameraActive_ == true) {
+			debugCamera_->Update();
+			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+			// ビュープロジェクション行列の転送
+			viewProjection_.TransferMatrix();
+		}
+		else {
+			railCamera_->Updata();
+			viewProjection_.matView = railCamera_->GetViewProjection().matView;
+			viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+			viewProjection_.TransferMatrix();
+			// ビュープロジェクション行列の更新と転送
+			// viewProjection_.UpdateMatrix();
+		}
+
+		// #endif
+
+		// debugCamera_->Update();
+		
+		--timer_;
+		if (timer_ < 0)
+		{
+			scene_ = 2;
+		}
+		break;
+	case 2:
+		// クリアシーン
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)
+		{
+			scene_ = 0;
+			Initialize();
+			timer_ = 60 * 30;
+		}
+		break;
 	}
-	// カメラの処理
-	if (isDebugCameraActive_ == true) {
-		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		// ビュープロジェクション行列の転送
-		viewProjection_.TransferMatrix();
-	} else {
-		railCamera_->Updata();
-		viewProjection_.matView = railCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();
-		// ビュープロジェクション行列の更新と転送
-		// viewProjection_.UpdateMatrix();
-	}
-	// #endif
-
-	// debugCamera_->Update();
-
-	ImGui::Begin("waitTime");
-	ImGui::Text("%d", waitTimer_);
-	ImGui::End();
 }
 
 void GameScene::Draw() {
@@ -213,6 +257,18 @@ void GameScene::Draw() {
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
+
+	if (scene_ == 0)
+	{
+		// タイトル画面
+		titleSprite_->Draw();
+	}
+
+	if (scene_ == 2)
+	{
+		// クリア画面
+		clearSprite_->Draw();
+	}
 
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる

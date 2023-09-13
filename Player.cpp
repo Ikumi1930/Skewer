@@ -10,24 +10,17 @@ Player::~Player() {
 }
 
 void Player::Attack() {
-	if (!isControl) {
-		XINPUT_STATE joyState;
+	XINPUT_STATE joyState;
 
-		if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
-			return;
-		}
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
-			isAttack = true;
-		} else {
-			isAttack = false;
-		}
-	} else if (isControl) {
-		if (input_->PushKey(DIK_SPACE)) {
-			isAttack = true;
-		} else {
-			isAttack = false;
-		}
+	// ゲームパッド未接続なら何もせず抜ける
+	if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
+		return;
 	}
+
+	// Rトリガーを押していたら
+	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+
+		isAttack = true;
 
 	if (isAttack) {
 		// 弾の速度
@@ -58,9 +51,8 @@ void Player::Attack() {
 		if (count == 0) {
 			
 		}
-	} else {
-		count = 0;
 	}
+
 }
 
 void Player::Initialize(Model* model, uint32_t textureHandle) {
