@@ -13,6 +13,10 @@ Enemy::~Enemy() {
 	for (TimedCall* timedCall : timedCall_) {
 		delete timedCall;
 	}
+
+	for (Particle* particle : particle_) {
+		delete particle;
+	}
 }
 
 
@@ -73,6 +77,9 @@ void EnemyStateLeave::Update() {
 void Enemy::Update() {
 	state->Update(this);
 
+	/*adjustPosition_.z += 0.0001f;
+	worldTransform_.translation_.z = adjustPosition_.z + worldTransform_.translation_.z;*/
+
 	worldTransform_.UpdateMatrix();
 	worldTransform_.TransferMatrix();
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
@@ -88,7 +95,7 @@ void Enemy::Draw(const ViewProjection& view) {
 	model_->Draw(worldTransform_, view, texturehandle_);
 }
 
-	void Enemy::ChangePosition(Vector3 vector) {
+void Enemy::ChangePosition(Vector3 vector) {
 	worldTransform_.translation_ = Add(worldTransform_.translation_, vector);
 }
 
@@ -110,7 +117,7 @@ bool Enemy::IsApproachChangeStatePosition() {
 }
 
 bool Enemy::IsLeaveChangeStatePosition() {
-	if (worldTransform_.translation_.z < 80.0f) {
+	if (worldTransform_.translation_.z < 0.0f) {
 		return true;
 	} else {
 		return false;
@@ -118,7 +125,8 @@ bool Enemy::IsLeaveChangeStatePosition() {
 }
 
 void Enemy::OnCollision() {
-
+	isAlive_ = false;
+	SpawnParticles();
 }
 
 void Enemy::Fire() {
@@ -151,4 +159,10 @@ void Enemy::Attack() {
 	// 弾を登録
 	// bullet_ = newBullet;
 	gameScene_->AddEnemyBullet(newBullet);
+}
+
+void Enemy::SpawnParticles() {
+	Particle* newParticle = new Particle();
+	newParticle->Initialize(model_, worldTransform_.translation_);
+	particle_.push_back(newParticle);
 }

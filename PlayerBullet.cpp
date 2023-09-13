@@ -55,7 +55,6 @@ void PlayerBullet::Update() {
 	// X軸周り角度(0x)
 	worldTransform_.rotation_.x = std::atan2(-velocity_.y, velocityXZ_);
 
-
 	worldTransform_.UpdateMatrix();
 	// 時間経過でデス
 	if (--deathtimer_ <= 0) {

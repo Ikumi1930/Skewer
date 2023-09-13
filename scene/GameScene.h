@@ -78,6 +78,8 @@ private: // メンバ変数
 	// 3Dモデルデータ
 	Model* model_ = nullptr;
 
+	Model* playerModel_ = nullptr;
+
 	WorldTransform worldTransform_;
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
@@ -117,6 +119,8 @@ private: // メンバ変数
 
 	Matrix4x4 viewprojectionMatrix;
 	Matrix4x4 viewportMatrix;
+
+	int enemyKillCount;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

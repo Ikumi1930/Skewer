@@ -225,7 +225,7 @@ void Player::Update(ViewProjection& viewProjection) {
 
 void Player::Draw(ViewProjection viewProjection) {
 
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw(worldTransform_, viewProjection);
 	model_->Draw(worldTransform3DReticle_, viewProjection, textureHandle_);
 	// 弾描画
 	/* if (bullet_) {

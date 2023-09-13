@@ -34,10 +34,14 @@ void GameScene::Initialize() {
 	worldTransform_.Initialize();
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
+
+	playerModel_ = Model::CreateFromOBJ("player", true);
 	// 自キャラの生成
 	player_ = new Player();
 	// 自キャラの初期化
-	player_->Initialize(model_, textureHandle_);
+	player_->Initialize(playerModel_, textureHandle_);
+
+	
 	// 敵の生成
 	// enemy_ = new Enemy;
 	// enemy_->SetPlayer(player_);
@@ -200,7 +204,7 @@ void GameScene::Draw() {
 		bullet->Draw(viewProjection_);
 	}
 
-	skydome_->Draw(viewProjection_);
+	//skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -249,7 +253,7 @@ void GameScene::CheckAllCollisions() {
 	}
 #pragma endregion
 
-#pragma region 自弾と敵キャラ
+#pragma region 自弾と敵弾
 
 	for (PlayerBullet* playerBullet : playerBullets) {
 		posB = playerBullet->GetWorldPosition();
@@ -284,8 +288,9 @@ void GameScene::CheckAllCollisions() {
 			float playerRad = 2.5f;
 			float enemyRad = 2.5f;
 			if (judge <= (playerRad + enemyRad) * (playerRad + enemyRad)) {
-				player_->OnCollision();
-				bullet->OnCollision();
+				enemy->OnCollision();
+				//bullet->OnCollision();
+				enemyKillCount++;
 			}
 		}
 	}
