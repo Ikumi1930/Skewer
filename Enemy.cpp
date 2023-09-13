@@ -20,21 +20,6 @@ Enemy::~Enemy() {
 }
 
 
-	if (timer < 0) {
-		// 弾の速度
-		const float kBulletSpeed = 1.0f;
-		
-		Vector3 plaPos = player_->GetWorldPosition();
-		Vector3 enePos = GetWorldPosition();
-		Vector3 speed;
-		speed.x = plaPos.x - enePos.x;
-		speed.y = plaPos.y - enePos.y;
-		speed.z = plaPos.z - enePos.z;
-		speed = Math::Normalize(speed);
-		speed.x *= kBulletSpeed;
-		speed.y *= kBulletSpeed;
-		speed.z *= kBulletSpeed;
-
 void Enemy::Initialize(Model* model, const Vector3& position) {
 
 	assert(model);
@@ -106,6 +91,9 @@ void Enemy::Update() {
 
 void Enemy::Draw(const ViewProjection& view) {
 	model_->Draw(worldTransform_, view, texturehandle_);
+	for (Particle* particle : particle_) {
+		particle->Draw(view);
+	}
 }
 
 void Enemy::ChangePosition(Vector3 vector) {
@@ -151,27 +139,28 @@ void Enemy::Fire() {
 
 void Enemy::Attack() {
 	assert(player_);
+	if (timer < 0) {
+		// 弾の速度
+		const float kBulletSpeed = 1.0f;
+		Vector3 plaPos = player_->GetWorldPosition();
+		Vector3 enePos = GetWorldPosition();
+		Vector3 speed = {};
+		speed.x = plaPos.x - enePos.x;
+		speed.y = plaPos.y - enePos.y;
+		speed.z = plaPos.z - enePos.z;
+		speed = Math::Normalize(speed);
+		speed.x *= kBulletSpeed;
+		speed.y *= kBulletSpeed;
+		speed.z *= kBulletSpeed;
 
-	// 弾の速度
-	const float kBulletSpeed = 1.0f;
-	Vector3 plaPos = player_->GetWorldPosition();
-	Vector3 enePos = GetWorldPosition();
-	Vector3 speed = {};
-	speed.x = plaPos.x - enePos.x;
-	speed.y = plaPos.y - enePos.y;
-	speed.z = plaPos.z - enePos.z;
-	speed = Math::Normalize(speed);
-	speed.x *= kBulletSpeed;
-	speed.y *= kBulletSpeed;
-	speed.z *= kBulletSpeed;
+		speed = Math::TransformNormal(speed, worldTransform_.matWorld_);
 
-	speed = Math::TransformNormal(speed, worldTransform_.matWorld_);
-
-	EnemyBullet* newBullet = new EnemyBullet();
-	newBullet->Initialize(model_, worldTransform_.translation_, speed);
-	// 弾を登録
-	// bullet_ = newBullet;
-	gameScene_->AddEnemyBullet(newBullet);
+		EnemyBullet* newBullet = new EnemyBullet();
+		newBullet->Initialize(model_, worldTransform_.translation_, speed);
+		// 弾を登録
+		// bullet_ = newBullet;
+		gameScene_->AddEnemyBullet(newBullet);
+	}
 }
 
 void Enemy::SpawnParticles() {

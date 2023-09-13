@@ -27,7 +27,7 @@ private:
 
 	Vector3 acceleration_;
 
-	static const int32_t kLifeTime = 50;
+	static const int32_t kLifeTime = 10;
 	// デスタイマー
 	int32_t deathtimer_ = kLifeTime;
 	// デスフラグ

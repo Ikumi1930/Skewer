@@ -78,8 +78,6 @@ private: // メンバ変数
 	// 3Dモデルデータ
 	Model* model_ = nullptr;
 
-	Model* playerModel_ = nullptr;
-
 	WorldTransform worldTransform_;
 	// ビュープロジェクション
 	ViewProjection viewProjection_;

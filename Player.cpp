@@ -22,34 +22,35 @@ void Player::Attack() {
 
 		isAttack = true;
 
-	if (isAttack) {
-		// 弾の速度
-		const float kBulletSpeed = 20.0f;
-		// Vector3 velocity(0, 0, kBulletSpeed);
-		Vector3 velocity = {};
-		Vector3 Reticle3DPos = {};
-		Reticle3DPos.x = worldTransform3DReticle_.matWorld_.m[3][0];
-		Reticle3DPos.y = worldTransform3DReticle_.matWorld_.m[3][1];
-		Reticle3DPos.z = worldTransform3DReticle_.matWorld_.m[3][2];
+		if (isAttack) {
+			// 弾の速度
+			const float kBulletSpeed = 20.0f;
+			// Vector3 velocity(0, 0, kBulletSpeed);
+			Vector3 velocity = {};
+			Vector3 Reticle3DPos = {};
+			Reticle3DPos.x = worldTransform3DReticle_.matWorld_.m[3][0];
+			Reticle3DPos.y = worldTransform3DReticle_.matWorld_.m[3][1];
+			Reticle3DPos.z = worldTransform3DReticle_.matWorld_.m[3][2];
 
-		// velocity = Math::TransformNormal(velocity, worldTransform_.matWorld_);
+			// velocity = Math::TransformNormal(velocity, worldTransform_.matWorld_);
 
-		velocity.x = Reticle3DPos.x - worldTransform_.matWorld_.m[3][0];
-		velocity.y = Reticle3DPos.y - worldTransform_.matWorld_.m[3][1];
-		velocity.z = Reticle3DPos.z - worldTransform_.matWorld_.m[3][2];
-		velocity = Math::FVMultiply(kBulletSpeed, Math::Normalize(velocity));
+			velocity.x = Reticle3DPos.x - worldTransform_.matWorld_.m[3][0];
+			velocity.y = Reticle3DPos.y - worldTransform_.matWorld_.m[3][1];
+			velocity.z = Reticle3DPos.z - worldTransform_.matWorld_.m[3][2];
+			velocity = Math::FVMultiply(kBulletSpeed, Math::Normalize(velocity));
 
-		// 速度ベクトルを自機の向きに合わせて回転させる
-		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+			// 速度ベクトルを自機の向きに合わせて回転させる
+			velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
-		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, GetWorldPosition(), velocity);
-		// 弾を登録
-		// bullet_ = newBullet;
-		bullets_.push_back(newBullet);
-		count++;
-		if (count == 0) {
-			
+			PlayerBullet* newBullet = new PlayerBullet();
+			newBullet->Initialize(model_, GetWorldPosition(), velocity);
+			// 弾を登録
+			// bullet_ = newBullet;
+			bullets_.push_back(newBullet);
+			/*count++;
+			if (count == 0) {
+
+			}*/
 		}
 	}
 
@@ -59,8 +60,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 
 	// NULLポインタチェック
 	assert(model);
-
 	model_ = model;
+	playerModel_ = Model::CreateFromOBJ("player", true);
 	textureHandle_ = textureHandle;
 
 	worldTransform_.Initialize();
@@ -70,7 +71,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 
 	worldTransform3DReticle_.Initialize();
 
-	uint32_t textureReticle = TextureManager::Load("white1x1.png");
+	uint32_t textureReticle = TextureManager::Load("reticle.png");
 
 	sprite2DReticle_ = Sprite::Create(
 	    textureReticle, {WinApp::kWindowWidth / 2, WinApp::kWindowHeight / 2}, {1, 1, 1, 1},
@@ -217,8 +218,8 @@ void Player::Update(ViewProjection& viewProjection) {
 
 void Player::Draw(ViewProjection viewProjection) {
 
-	model_->Draw(worldTransform_, viewProjection);
-	model_->Draw(worldTransform3DReticle_, viewProjection, textureHandle_);
+	playerModel_->Draw(worldTransform_, viewProjection);
+	//model_->Draw(worldTransform3DReticle_, viewProjection, textureHandle_);
 	// 弾描画
 	/* if (bullet_) {
 	    bullet_->Draw(viewProjection);

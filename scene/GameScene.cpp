@@ -46,11 +46,11 @@ void GameScene::Initialize() {
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 
-	playerModel_ = Model::CreateFromOBJ("player", true);
+	
 	// 自キャラの生成
 	player_ = new Player();
 	// 自キャラの初期化
-	player_->Initialize(playerModel_, textureHandle_);
+	player_->Initialize(model_, textureHandle_);
 
 	
 	// 敵の生成
