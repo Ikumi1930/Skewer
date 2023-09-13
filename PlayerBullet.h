@@ -29,4 +29,5 @@ private:
 	int32_t deathtimer_ = kLifeTime;
 	// デスフラグ
 	bool isDead_ = false;
+
 };

@@ -10,7 +10,7 @@ Player::~Player() {
 }
 
 void Player::Attack() {
-	if (!isControl) {
+	/*if (!isControl) {
 		XINPUT_STATE joyState;
 
 		if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
@@ -20,17 +20,13 @@ void Player::Attack() {
 			isAttack = true;
 		} else {
 			isAttack = false;
-		}
-	} else if (isControl) {
-		if (input_->PushKey(DIK_SPACE)) {
-			isAttack = true;
-		} else {
-			isAttack = false;
-		}
-	}
+		}*/
+	
+	if (input_->PushKey(DIK_SPACE)) {
 
-	if (isAttack) {
-		if (count == 0) {
+		isAttack = true;
+
+		if (isAttack) {
 			// 弾の速度
 			const float kBulletSpeed = 1.0f;
 			// Vector3 velocity(0, 0, kBulletSpeed);
@@ -51,11 +47,9 @@ void Player::Attack() {
 			// 弾を登録
 			// bullet_ = newBullet;
 			bullets_.push_back(newBullet);
-			count++;
 		}
-	} else {
-		count = 0;
 	}
+
 }
 
 void Player::Initialize(Model* model, uint32_t textureHandle) {

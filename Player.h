@@ -63,8 +63,6 @@ private:
 	// 弾
 	std::list<PlayerBullet*> bullets_;
 
-	int count = 0;
-
 	bool isControl = false;
 	bool isAttack = false;
 

@@ -27,7 +27,7 @@ void Enemy::Attack() {
 	if (timer < 0) {
 		// 弾の速度
 		const float kBulletSpeed = 1.0f;
-
+		
 		Vector3 plaPos = player_->GetWorldPosition();
 		Vector3 enePos = GetWorldPosition();
 		Vector3 speed;
@@ -147,4 +147,9 @@ void Enemy::Draw(const ViewProjection& view) {
 	for (EnemyBullet* bullet : bullets_) {
 		bullet->Draw(view);
 	}
+}
+
+void Enemy::OnCollision()
+{
+	isDead_ = true;
 }

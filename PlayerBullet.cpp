@@ -3,7 +3,6 @@
 #include <assert.h>
 
 void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
-
 	assert(model);
 	model_ = model;
 	// テクスチャ読み込み
@@ -19,7 +18,6 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 
 Vector3 PlayerBullet::GetWorldPosition() {
 	Vector3 worldPos;
-
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
 	worldPos.z = worldTransform_.matWorld_.m[3][2];

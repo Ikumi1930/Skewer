@@ -97,6 +97,21 @@ private: // メンバ変数
 	bool isWait_ = false;
 	int32_t waitTimer_ = 0;
 
+
+	int32_t scene_ = 0;
+	// クリアまでにかかる時間
+	int32_t timer_ = 60 * 30;
+
+	// タイトル画像
+	Sprite* titleSprite_ = nullptr;
+	uint32_t titleTexture_ = 0;
+
+	// クリア画像
+	uint32_t clearTexture_ = 0;
+	Sprite* clearSprite_ = nullptr;
+
+	
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
