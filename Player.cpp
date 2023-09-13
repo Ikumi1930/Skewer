@@ -164,13 +164,13 @@ void Player::Update(ViewProjection& viewProjection) {
 	//     worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
 	// ImGuiスライダー
-	ImGui::Begin("PlayerDebug");
-	ImGui::Text("DebugCamera Toggle : ENTER");
-	ImGui::Text("Change Mouse : Push M");
-	ImGui::Text("Change Controller : Push C");
-	ImGui::SliderFloat3("Positions", inputFloat3, -20.0f, 20.0f);
-	// ImGui終わり
-	ImGui::End();
+	//ImGui::Begin("PlayerDebug");
+	//ImGui::Text("DebugCamera Toggle : ENTER");
+	//ImGui::Text("Change Mouse : Push M");
+	//ImGui::Text("Change Controller : Push C");
+	//ImGui::SliderFloat3("Positions", inputFloat3, -20.0f, 20.0f);
+	//// ImGui終わり
+	//ImGui::End();
 
 	// 移動限界座標
 	const float kMoveLimitX = 34;
@@ -283,7 +283,7 @@ void Player::MouseUpdate(ViewProjection& view) {
 	mouseDirection.z = posFar.z - posNear.z;
 	mouseDirection = Math::Normalize(mouseDirection);
 
-	const float kDistanceTestObject = 100.0f;
+	const float kDistanceTestObject = 200.0f;
 	worldTransform3DReticle_.translation_.x =
 	    Math::FVMultiply(kDistanceTestObject, mouseDirection).x + posNear.x;
 	worldTransform3DReticle_.translation_.y =
@@ -293,7 +293,7 @@ void Player::MouseUpdate(ViewProjection& view) {
 
 	worldTransform3DReticle_.UpdateMatrix();
 
-	ImGui::Begin("Player");
+	/*ImGui::Begin("Player");
 	ImGui::Text(
 	    "2DReticle:(%f,%f)", sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y);
 	ImGui::Text("Near:(%+.2f,%+.2f,%+.2f)", posNear.x, posNear.y, posNear.z);
@@ -301,7 +301,7 @@ void Player::MouseUpdate(ViewProjection& view) {
 	ImGui::Text(
 	    "3DReticle:(%+.2f,%+.2f,%+.2f)", worldTransform3DReticle_.translation_.x,
 	    worldTransform3DReticle_.translation_.y, worldTransform3DReticle_.translation_.z);
-	ImGui::End();
+	ImGui::End();*/
 }
 
 void Player::SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }

@@ -82,18 +82,16 @@ void Enemy::Update() {
 	worldTransform_.TransferMatrix();
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 
-	ImGui::Begin("enemyPos");
+	/*ImGui::Begin("enemyPos");
 	ImGui::Text("%f,%f,%f", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);
-	ImGui::End();
+	ImGui::End();*/
 }
 
 
 
 void Enemy::Draw(const ViewProjection& view) {
 	model_->Draw(worldTransform_, view, texturehandle_);
-	for (Particle* particle : particle_) {
-		particle->Draw(view);
-	}
+
 }
 
 void Enemy::ChangePosition(Vector3 vector) {
@@ -127,7 +125,7 @@ bool Enemy::IsLeaveChangeStatePosition() {
 
 void Enemy::OnCollision() {
 	isAlive_ = false;
-	SpawnParticles();
+	//SpawnParticles();
 }
 
 void Enemy::Fire() {
@@ -163,8 +161,8 @@ void Enemy::Attack() {
 	}
 }
 
-void Enemy::SpawnParticles() {
-	Particle* newParticle = new Particle();
-	newParticle->Initialize(model_, worldTransform_.translation_);
-	particle_.push_back(newParticle);
-}
+//void Enemy::SpawnParticles() {
+//	Particle* newParticle = new Particle();
+//	newParticle->Initialize(model_, worldTransform_.translation_);
+//	particle_.push_back(newParticle);
+//}

@@ -120,6 +120,10 @@ private: // メンバ変数
 	uint32_t clearTexture_ = 0;
 	Sprite* clearSprite_ = nullptr;
 
+	// UI画像
+	Sprite* UISprite_ = nullptr;
+	uint32_t UITexture_ = 0;
+
 	
 
 	PrimitiveDrawer* primitiveDrawer_ = nullptr;
