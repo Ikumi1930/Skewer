@@ -34,8 +34,8 @@ void Player::Attack() {
 			// 弾の速度
 			const float kBulletSpeed = 1.0f;
 			// Vector3 velocity(0, 0, kBulletSpeed);
-			Vector3 velocity;
-			Vector3 Reticle3DPos;
+			Vector3 velocity{};
+			Vector3 Reticle3DPos{};
 			Reticle3DPos.x = worldTransform3DReticle_.matWorld_.m[3][0];
 			Reticle3DPos.y = worldTransform3DReticle_.matWorld_.m[3][1];
 			Reticle3DPos.z = worldTransform3DReticle_.matWorld_.m[3][2];
@@ -83,7 +83,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 void Player::OnCollision() {}
 
 Vector3 Player::GetWorldPosition() {
-	Vector3 worldPos;
+	Vector3 worldPos{};
 
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
@@ -269,7 +269,7 @@ void Player::MouseUpdate(ViewProjection& view) {
 	posNear = Math::TransformCoord(posNear, matInverseVPV);
 	posFar = Math::TransformCoord(posFar, matInverseVPV);
 
-	Vector3 mouseDirection;
+	Vector3 mouseDirection{};
 	mouseDirection.x = posFar.x - posNear.x;
 	mouseDirection.y = posFar.y - posNear.y;
 	mouseDirection.z = posFar.z - posNear.z;

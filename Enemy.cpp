@@ -13,6 +13,10 @@ Enemy::~Enemy() {
 	for (TimedCall* timedCall : timedCall_) {
 		delete timedCall;
 	}
+
+	for (Particle* particle : particle_) {
+		delete particle;
+	}
 }
 
 
@@ -30,7 +34,7 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 }
 
 Vector3 Enemy::GetWorldPosition() {
-	Vector3 worldPos;
+	Vector3 worldPos{};
 
 	worldPos.x = worldTransform_.translation_.x;
 	worldPos.y = worldTransform_.translation_.y;
@@ -86,9 +90,11 @@ void Enemy::Update() {
 
 void Enemy::Draw(const ViewProjection& view) {
 	model_->Draw(worldTransform_, view, texturehandle_);
+
+	
 }
 
-	void Enemy::ChangePosition(Vector3 vector) {
+void Enemy::ChangePosition(Vector3 vector) {
 	worldTransform_.translation_ = Add(worldTransform_.translation_, vector);
 }
 
@@ -118,7 +124,9 @@ bool Enemy::IsLeaveChangeStatePosition() {
 }
 
 void Enemy::OnCollision() {
-
+	for (int i = 0; i < 10; i++) {
+		SpawnParticles();
+	}
 }
 
 void Enemy::Fire() {
@@ -153,8 +161,9 @@ void Enemy::Attack() {
 	gameScene_->AddEnemyBullet(newBullet);
 }
 
-//void Enemy::SpawnParticles() {
-//	Particle* newParticle = new Particle();
-//	newParticle->Initialize(model_, worldTransform_.translation_);
-//	particle_.push_back(newParticle);
-//}
+void Enemy::SpawnParticles() {
+	Particle* newParticle = new Particle();
+	newParticle->Initialize(model_, worldTransform_.translation_,gameScene_->GetParticleTexture());
+	gameScene_->AddParticle(newParticle);
+	//particle_.push_back(newParticle);
+}

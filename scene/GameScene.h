@@ -15,6 +15,7 @@
 #include <Skydome.h>
 #include <sstream>
 #include "TimedCall.h"
+#include "Particle.h"
 
 /// <summary>
 /// ゲームシーン
@@ -64,7 +65,9 @@ public: // メンバ関数
 
 	void UpDateEnemyPopCommands();
 
-	
+	void AddParticle(Particle* particle);
+
+	uint32_t GetParticleTexture() { return particleTextureHandle_; }
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -106,7 +109,9 @@ private: // メンバ変数
 	bool isWait_ = false;
 	int32_t waitTimer_ = 0;
 
-	
+	std::list<Particle*> particles_;
+
+	uint32_t particleTextureHandle_ = 0;
 
 	/// <summary>
 	/// ゲームシーン用

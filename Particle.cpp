@@ -1,12 +1,13 @@
 #include "Particle.h"
 #include <assert.h>
 #include "Enemy.h"
+#include "GameScene.h"
 
-void Particle::Initialize(Model* model, const Vector3& position) {
+void Particle::Initialize(Model* model, const Vector3& position, uint32_t textureHandle) {
 
 	assert(model);
 	model_ = model;
-	texturehandle_ = TextureManager::Load("gakugakun2.png");
+	texturehandle_ = textureHandle;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
 	velocity_ = { (float)GetRandom(-2,2),(float)GetRandom(-2,2) ,(float)GetRandom(-2,2) };
@@ -16,7 +17,7 @@ void Particle::Initialize(Model* model, const Vector3& position) {
 
 void Particle::Update() {
 	if (!isDead_) {
-		velocity_ = Add(velocity_, acceleration_);
+		//velocity_ = Add(velocity_, acceleration_);
 
 		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 
@@ -33,3 +34,10 @@ void Particle::Draw(const ViewProjection& view) {
 		model_->Draw(worldTransform_, view, texturehandle_);
 	}
 }
+
+//void Particle::Spawn() {
+//	Particle* newParticle = new Particle();
+//	newParticle->Initialize(model_, enemy_->GetWorldPosition(), texturehandle_);
+//	gameScene_->AddParticle(newParticle);
+//	//particle_.push_back(newParticle);
+//}

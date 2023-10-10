@@ -25,7 +25,7 @@ private:
 	Vector3 velocity_;
 	// Vector3 Add(Vector3& a, Vector3& b);
 
-	static const int32_t kLifeTime = 60;
+	static const int32_t kLifeTime = 200;
 	// デスタイマー
 	int32_t deathtimer_ = kLifeTime;
 	// デスフラグ

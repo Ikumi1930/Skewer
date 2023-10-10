@@ -13,14 +13,13 @@
 #include "WorldTransform.h"
 #include "newMath.h"
 #include <list>
+#include "Particle.h"
 
 class Player;
 class GameScene;
 
 class Enemy;
 class IEnemyState;
-
-class GameScene;
 /**
 enum class Phase {
 	Approach,
@@ -95,6 +94,8 @@ public:
 	void Attack();
 
 	void Fire();
+
+	void SpawnParticles();
 private:
 	WorldTransform worldTransform_;
 	Model* model_;
@@ -117,4 +118,6 @@ private:
 	bool isDead_ = false;
 
 	bool isAlive_;
+
+	std::list <Particle*> particle_;
 };

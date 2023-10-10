@@ -6,19 +6,25 @@
 #include "vector3.h"
 
 class Enemy;
+class GameScene;
 
 class Particle
 {
 public:
-	void Initialize(Model* model, const Vector3& position);
+	void Initialize(Model* model, const Vector3& position, uint32_t textureHandle);
 
 	void Update();
 
 	void Draw(const ViewProjection& view);
+
+	bool GetIsDead() { return isDead_; }
+
+	//void Spawn();
 private:
 	WorldTransform worldTransform_;
 
 	Enemy* enemy_;
+	GameScene* gameScene_;
 
 	Model* model_;
 	uint32_t texturehandle_;
@@ -27,7 +33,7 @@ private:
 
 	Vector3 acceleration_;
 
-	static const int32_t kLifeTime = 10;
+	static const int32_t kLifeTime = 100;
 	// デスタイマー
 	int32_t deathtimer_ = kLifeTime;
 	// デスフラグ

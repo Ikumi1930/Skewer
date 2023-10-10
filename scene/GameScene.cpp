@@ -29,6 +29,8 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	// テクスチャを読み込み
 	textureHandle_ = TextureManager::Load("SusumePlayer1.png");
+
+	particleTextureHandle_ = TextureManager::Load("ball.png");
 	// 3Dモデルの生成
 	model_ = Model::Create();
 	worldTransform_.Initialize();
@@ -59,6 +61,8 @@ void GameScene::Initialize() {
 	railCamera_->Initialize({0, 0, -100.0f}, player_->GetWorldMatrix().rotation_);
 
 	player_->SetParent(&railCamera_->GetWorldTransform());
+
+	
 
 	// TextureManager::Load("beam.png");
 
@@ -96,15 +100,6 @@ void GameScene::Update() {
 		bullet->Update();
 	}
 
-	// デスフラグの立った球を削除
-	enemyBullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
-
 	// Attack();
 
 	timedCalls_.remove_if([](TimedCall* timedCall) {
@@ -119,12 +114,19 @@ void GameScene::Update() {
 		timedCalls->Update();
 	}
 
-	// 弾更新
-	for (EnemyBullet* bullet : enemyBullets_) {
-		bullet->Update();
+
+	//パーティクル更新
+	particles_.remove_if([](Particle* particle) {
+		if (particle->GetIsDead()) {
+			delete particle;
+			return true;
+		}
+		return false;
+		});
+
+	for (Particle* particle : particles_) {
+		particle->Update();
 	}
-
-
 
 	CheckAllCollisions();
 
@@ -199,7 +201,11 @@ void GameScene::Draw() {
 		bullet->Draw(viewProjection_);
 	}
 
-	skydome_->Draw(viewProjection_);
+	for (Particle* particle : particles_) {
+		particle->Draw(viewProjection_);
+	}
+
+	//skydome_->Draw(viewProjection_);
 
 
 
@@ -250,7 +256,7 @@ void GameScene::CheckAllCollisions() {
 	}
 #pragma endregion
 
-#pragma region 自弾と敵キャラ
+#pragma region 自弾と敵弾
 
 	for (PlayerBullet* playerBullet : playerBullets) {
 		posB = playerBullet->GetWorldPosition();
@@ -285,7 +291,7 @@ void GameScene::CheckAllCollisions() {
 			float playerRad = 2.5f;
 			float enemyRad = 2.5f;
 			if (judge <= (playerRad + enemyRad) * (playerRad + enemyRad)) {
-				player_->OnCollision();
+				enemy->OnCollision();
 				bullet->OnCollision();
 			}
 		}
@@ -361,6 +367,10 @@ void GameScene::UpDateEnemyPopCommands() {
 			break;
 		}
 	}
+}
+
+void GameScene::AddParticle(Particle* particle) {
+	particles_.push_back(particle);
 }
 
 
