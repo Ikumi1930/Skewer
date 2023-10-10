@@ -30,4 +30,6 @@ private:
 	int32_t deathtimer_ = kLifeTime;
 	// デスフラグ
 	bool isDead_ = false;
+
+	float velocityXZ_ = 0;
 };

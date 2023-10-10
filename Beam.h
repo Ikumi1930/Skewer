@@ -8,7 +8,7 @@
 class Enemy;
 class GameScene;
 
-class Particle
+class Beam
 {
 public:
 	void Initialize(Model* model, const Vector3& position, uint32_t textureHandle);
@@ -38,5 +38,7 @@ private:
 	int32_t deathtimer_ = kLifeTime;
 	// デスフラグ
 	bool isDead_ = false;
+
+	float velocityXZ_ = 0;
 };
 

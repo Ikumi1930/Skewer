@@ -30,7 +30,7 @@ void GameScene::Initialize() {
 	// テクスチャを読み込み
 	textureHandle_ = TextureManager::Load("SusumePlayer1.png");
 
-	particleTextureHandle_ = TextureManager::Load("ball.png");
+	dustTextureHandle_ = TextureManager::Load("ball.png");
 	// 3Dモデルの生成
 	model_ = Model::Create();
 	worldTransform_.Initialize();
@@ -116,16 +116,16 @@ void GameScene::Update() {
 
 
 	//パーティクル更新
-	particles_.remove_if([](Particle* particle) {
-		if (particle->GetIsDead()) {
-			delete particle;
+	Dusts_.remove_if([](Dust* Dust) {
+		if (Dust->GetIsDead()) {
+			delete Dust;
 			return true;
 		}
 		return false;
 		});
 
-	for (Particle* particle : particles_) {
-		particle->Update();
+	for (Dust* Dust : Dusts_) {
+		Dust->Update();
 	}
 
 	CheckAllCollisions();
@@ -201,8 +201,8 @@ void GameScene::Draw() {
 		bullet->Draw(viewProjection_);
 	}
 
-	for (Particle* particle : particles_) {
-		particle->Draw(viewProjection_);
+	for (Dust* Dust : Dusts_) {
+		Dust->Draw(viewProjection_);
 	}
 
 	//skydome_->Draw(viewProjection_);
@@ -369,8 +369,8 @@ void GameScene::UpDateEnemyPopCommands() {
 	}
 }
 
-void GameScene::AddParticle(Particle* particle) {
-	particles_.push_back(particle);
+void GameScene::AddDust(Dust* Dust) {
+	Dusts_.push_back(Dust);
 }
 
 

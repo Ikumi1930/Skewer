@@ -14,8 +14,8 @@ Enemy::~Enemy() {
 		delete timedCall;
 	}
 
-	for (Particle* particle : particle_) {
-		delete particle;
+	for (Dust* Dust : Dust_) {
+		delete Dust;
 	}
 }
 
@@ -125,7 +125,7 @@ bool Enemy::IsLeaveChangeStatePosition() {
 
 void Enemy::OnCollision() {
 	for (int i = 0; i < 10; i++) {
-		SpawnParticles();
+		SpawnDusts();
 	}
 }
 
@@ -161,9 +161,9 @@ void Enemy::Attack() {
 	gameScene_->AddEnemyBullet(newBullet);
 }
 
-void Enemy::SpawnParticles() {
-	Particle* newParticle = new Particle();
-	newParticle->Initialize(model_, worldTransform_.translation_,gameScene_->GetParticleTexture());
-	gameScene_->AddParticle(newParticle);
-	//particle_.push_back(newParticle);
+void Enemy::SpawnDusts() {
+	Dust* newDust = new Dust();
+	newDust->Initialize(model_, worldTransform_.translation_,gameScene_->GetDustTexture());
+	gameScene_->AddDust(newDust);
+	//Dust_.push_back(newDust);
 }

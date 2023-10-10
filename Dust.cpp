@@ -1,9 +1,9 @@
-#include "Particle.h"
+#include "Dust.h"
 #include <assert.h>
 #include "Enemy.h"
 #include "GameScene.h"
 
-void Particle::Initialize(Model* model, const Vector3& position, uint32_t textureHandle) {
+void Dust::Initialize(Model* model, const Vector3& position, uint32_t textureHandle) {
 
 	assert(model);
 	model_ = model;
@@ -15,7 +15,7 @@ void Particle::Initialize(Model* model, const Vector3& position, uint32_t textur
 	isDead_ = false;
 }
 
-void Particle::Update() {
+void Dust::Update() {
 	if (!isDead_) {
 		//velocity_ = Add(velocity_, acceleration_);
 
@@ -29,15 +29,15 @@ void Particle::Update() {
 	}
 }
 
-void Particle::Draw(const ViewProjection& view) {
+void Dust::Draw(const ViewProjection& view) {
 	if (!isDead_) {
 		model_->Draw(worldTransform_, view, texturehandle_);
 	}
 }
 
-//void Particle::Spawn() {
-//	Particle* newParticle = new Particle();
-//	newParticle->Initialize(model_, enemy_->GetWorldPosition(), texturehandle_);
-//	gameScene_->AddParticle(newParticle);
-//	//particle_.push_back(newParticle);
+//void Dust::Spawn() {
+//	Dust* newDust = new Dust();
+//	newDust->Initialize(model_, enemy_->GetWorldPosition(), texturehandle_);
+//	gameScene_->AddDust(newDust);
+//	//Dust_.push_back(newDust);
 //}

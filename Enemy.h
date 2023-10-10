@@ -13,7 +13,7 @@
 #include "WorldTransform.h"
 #include "newMath.h"
 #include <list>
-#include "Particle.h"
+#include "Dust.h"
 
 class Player;
 class GameScene;
@@ -95,7 +95,7 @@ public:
 
 	void Fire();
 
-	void SpawnParticles();
+	void SpawnDusts();
 private:
 	WorldTransform worldTransform_;
 	Model* model_;
@@ -119,5 +119,5 @@ private:
 
 	bool isAlive_;
 
-	std::list <Particle*> particle_;
+	std::list <Dust*> Dust_;
 };
