@@ -152,3 +152,9 @@ void Enemy::Attack() {
 	// bullet_ = newBullet;
 	gameScene_->AddEnemyBullet(newBullet);
 }
+
+//void Enemy::SpawnParticles() {
+//	Particle* newParticle = new Particle();
+//	newParticle->Initialize(model_, worldTransform_.translation_);
+//	particle_.push_back(newParticle);
+//}
