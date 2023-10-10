@@ -16,6 +16,7 @@
 #include <sstream>
 #include "TimedCall.h"
 #include "Dust.h"
+#include "Beam.h"
 
 /// <summary>
 /// ゲームシーン
@@ -65,7 +66,9 @@ public: // メンバ関数
 
 	void UpDateEnemyPopCommands();
 
-	void AddDust(Dust* Dust);
+	void AddDust(Dust* dust);
+
+	void AddBeam(Beam* beam);
 
 	uint32_t GetDustTexture() { return dustTextureHandle_; }
 
@@ -109,7 +112,8 @@ private: // メンバ変数
 	bool isWait_ = false;
 	int32_t waitTimer_ = 0;
 
-	std::list<Dust*> Dusts_;
+	std::list<Dust*> dusts_;
+	std::list<Beam*> beams_;
 
 	uint32_t dustTextureHandle_ = 0;
 

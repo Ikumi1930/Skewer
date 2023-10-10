@@ -6,14 +6,16 @@
 
 int GetRandom(int min, int max);
 
-// float GetRandom(float min, float max);
+//float GetRandom(float min, float max);
 
 float Clamp(float number, float min, float max);
 
 // 加算
 Vector3 Add(const Vector3& v1, const Vector3& v2);
+Vector3 Add(const float& scalar, Vector3& v);
 // 減算
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
+Vector3 Subtract(const float& scalar, Vector3& v);
 // スカラー倍
 Vector3 Multiply(float scalar, const Vector3& v);
 // 内積

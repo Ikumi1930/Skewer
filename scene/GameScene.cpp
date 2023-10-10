@@ -116,17 +116,30 @@ void GameScene::Update() {
 
 
 	//パーティクル更新
-	Dusts_.remove_if([](Dust* Dust) {
-		if (Dust->GetIsDead()) {
-			delete Dust;
+	dusts_.remove_if([](Dust* dust) {
+		if (dust->GetIsDead()) {
+			delete dust;
 			return true;
 		}
 		return false;
 		});
 
-	for (Dust* Dust : Dusts_) {
-		Dust->Update();
+	for (Dust* dust : dusts_) {
+		dust->Update();
 	}
+
+	beams_.remove_if([](Beam* beam) {
+		if (beam->GetIsDead()) {
+			delete beam;
+			return true;
+		}
+		return false;
+		});
+
+	for (Beam* beam : beams_) {
+		beam->Update();
+	}
+
 
 	CheckAllCollisions();
 
@@ -201,8 +214,12 @@ void GameScene::Draw() {
 		bullet->Draw(viewProjection_);
 	}
 
-	for (Dust* Dust : Dusts_) {
-		Dust->Draw(viewProjection_);
+	for (Dust* dust : dusts_) {
+		dust->Draw(viewProjection_);
+	}
+
+	for (Beam* beam : beams_) {
+		beam->Draw(viewProjection_);
 	}
 
 	//skydome_->Draw(viewProjection_);
@@ -369,8 +386,11 @@ void GameScene::UpDateEnemyPopCommands() {
 	}
 }
 
-void GameScene::AddDust(Dust* Dust) {
-	Dusts_.push_back(Dust);
+void GameScene::AddDust(Dust* dust) {
+	dusts_.push_back(dust);
 }
 
+void GameScene::AddBeam(Beam* beam) {
+	beams_.push_back(beam);
+}
 

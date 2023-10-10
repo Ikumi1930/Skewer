@@ -14,8 +14,12 @@ Enemy::~Enemy() {
 		delete timedCall;
 	}
 
-	for (Dust* Dust : Dust_) {
-		delete Dust;
+	for (Dust* dust : dust_) {
+		delete dust;
+	}
+
+	for (Beam* beam : beam_) {
+		delete beam;
 	}
 }
 
@@ -124,8 +128,11 @@ bool Enemy::IsLeaveChangeStatePosition() {
 }
 
 void Enemy::OnCollision() {
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < MAXDUST; i++) {
 		SpawnDusts();
+	}
+	for (int i = 0; i < MAXBEAM; i++) {
+ 		SpawnBeam();
 	}
 }
 
@@ -166,4 +173,10 @@ void Enemy::SpawnDusts() {
 	newDust->Initialize(model_, worldTransform_.translation_,gameScene_->GetDustTexture());
 	gameScene_->AddDust(newDust);
 	//Dust_.push_back(newDust);
+}
+
+void Enemy::SpawnBeam() {
+	Beam* newBeam = new Beam();
+	newBeam->Initialize(model_, worldTransform_.translation_, gameScene_->GetDustTexture());
+	gameScene_->AddBeam(newBeam);
 }

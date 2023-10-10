@@ -29,6 +29,10 @@ private:
 	Model* model_;
 	uint32_t texturehandle_;
 
+	int velocityValue_ = 5;
+
+	Vector3 accelerationValue_;
+
 	Vector3 velocity_;
 
 	Vector3 acceleration_;

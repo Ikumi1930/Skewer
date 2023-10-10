@@ -25,24 +25,33 @@ int GetRandom(int min, int max) {
 	return min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
 }
 
-// float GetRandom(float min, float max) {
-//	static float flag;
-//
-//	if (flag == 0) {
-//		srand((float)time(NULL));
-//		flag = 1;
-//	}
-//
-//	return min + (float)(rand() * (max - min + 1.0f) / (1.0f + RAND_MAX));
-// }
+ //float GetRandom(float min, float max) {
+	//static float flag;
+
+	//if (flag == 0) {
+	//	srand((unsigned int)time(NULL));
+	//	flag = 1;
+	//}
+
+	//return min + (float)(rand() * (max - min + 1.0f) / (1.0f + RAND_MAX));
+ //}
 
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	Vector3 num = {v1.x + v2.x, v1.y + v2.y, v1.z + v2.z};
 	return num;
 }
+Vector3 Add(const float& scalar, Vector3& v) {
+	Vector3 num = { scalar + v.x, scalar + v.y, scalar + v.z };
+	return num;
+}
+
 
 Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 	Vector3 num = {v1.x - v2.x, v1.y - v2.y, v1.z - v2.z};
+	return num;
+}
+Vector3 Subtract(const float& scalar, Vector3& v) {
+	Vector3 num = { scalar - v.x, scalar - v.y, scalar - v.z };
 	return num;
 }
 

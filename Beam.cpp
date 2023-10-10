@@ -10,9 +10,11 @@ void Beam::Initialize(Model* model, const Vector3& position, uint32_t textureHan
 	texturehandle_ = textureHandle;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	velocity_ = { (float)GetRandom(-2,2),(float)GetRandom(-2,2) ,(float)GetRandom(-2,2) };
-	acceleration_ = { 0.001f,0.001f,0.001f };
+	velocity_ = { (float)GetRandom(-velocityValue_,velocityValue_),(float)GetRandom (-velocityValue_,velocityValue_) ,(float)GetRandom(-velocityValue_,velocityValue_)};
+	acceleration_ = Multiply(-0.001f,velocity_);
+	accelerationValue_ = Multiply(0.5f, acceleration_);
 	isDead_ = false;
+	worldTransform_.scale_ = { 0.1f,0.1f,10.0f };
 }
 
 void Beam::Update() {
@@ -22,6 +24,10 @@ void Beam::Update() {
 
 		////ベクトルを正規化する
 		//toReticle = Normalize(toReticle);
+		acceleration_ = Add(accelerationValue_, acceleration_);
+
+		velocity_ = Add(velocity_, acceleration_);
+
 
 		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 
@@ -35,7 +41,7 @@ void Beam::Update() {
 		worldTransform_.UpdateMatrix();
 	}
 	// 時間経過でデス
-	if (--deathtimer_ <= 0) {
+	if (--deathtimer_ <= 0 || velocity_.x <= acceleration_.x && velocity_.y <= acceleration_.y && velocity_.z <= acceleration_.z) {
 		isDead_ = true;
 	}
 }

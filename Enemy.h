@@ -14,6 +14,10 @@
 #include "newMath.h"
 #include <list>
 #include "Dust.h"
+#include "Beam.h"
+
+#define MAXDUST 50
+#define MAXBEAM 15
 
 class Player;
 class GameScene;
@@ -96,6 +100,8 @@ public:
 	void Fire();
 
 	void SpawnDusts();
+
+	void SpawnBeam();
 private:
 	WorldTransform worldTransform_;
 	Model* model_;
@@ -119,5 +125,7 @@ private:
 
 	bool isAlive_;
 
-	std::list <Dust*> Dust_;
+	std::list <Dust*> dust_;
+
+	std::list <Beam*> beam_;
 };

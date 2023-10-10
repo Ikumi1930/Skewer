@@ -10,9 +10,10 @@ void Dust::Initialize(Model* model, const Vector3& position, uint32_t textureHan
 	texturehandle_ = textureHandle;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	velocity_ = { (float)GetRandom(-2,2),(float)GetRandom(-2,2) ,(float)GetRandom(-2,2) };
-	acceleration_ = { 0.001f,0.001f,0.001f };
+	velocity_ = { (float)GetRandom(-velocityValue_,velocityValue_),(float)GetRandom(-velocityValue_,velocityValue_) ,(float)GetRandom(-velocityValue_,velocityValue_) };
+	acceleration_ = { 0.01f,0.01f,0.01f };
 	isDead_ = false;
+	worldTransform_.scale_ = { 0.5f,0.5f,0.5f };
 }
 
 void Dust::Update() {
