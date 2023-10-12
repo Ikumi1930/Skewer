@@ -16,7 +16,7 @@
 #include <sstream>
 #include "TimedCall.h"
 #include "Dust.h"
-#include "Beam.h"
+#include "ReFire.h"
 
 /// <summary>
 /// ゲームシーン
@@ -60,17 +60,14 @@ public: // メンバ関数
 
 	void AddEnemy(Enemy* enemy);
 
-	void EnemyIni(Model* model, const Vector3 position);
+	void EnemyIni(Model* model, const Vector3 position, Model* dustModel, uint32_t dustTexture, Model* reFireModel, uint32_t& reFireTexture);
 
 	void LoadEnemyPopData();
 
 	void UpDateEnemyPopCommands();
 
-	void AddDust(Dust* dust);
-
-	void AddBeam(Beam* beam);
-
 	uint32_t GetDustTexture() { return dustTextureHandle_; }
+	Model* GetDustModel() { return dustModel_; }
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -112,10 +109,13 @@ private: // メンバ変数
 	bool isWait_ = false;
 	int32_t waitTimer_ = 0;
 
-	std::list<Dust*> dusts_;
-	std::list<Beam*> beams_;
-
 	uint32_t dustTextureHandle_ = 0;
+
+	Model* dustModel_ = 0;
+
+	uint32_t reFireTextureHandle_ = 0;
+
+	Model* reFireModel_ = 0;
 
 	/// <summary>
 	/// ゲームシーン用

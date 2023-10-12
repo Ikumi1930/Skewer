@@ -13,20 +13,12 @@ Enemy::~Enemy() {
 	for (TimedCall* timedCall : timedCall_) {
 		delete timedCall;
 	}
-
-	for (Dust* dust : dust_) {
-		delete dust;
-	}
-
-	for (Beam* beam : beam_) {
-		delete beam;
-	}
 }
 
 
 
 
-void Enemy::Initialize(Model* model, const Vector3& position) {
+void Enemy::Initialize(Model* model, const Vector3& position, Model* dustModel, uint32_t& dustTexture, Model* reFireModel, uint32_t& reFireTexture) {
 
 	assert(model);
 	model_ = model;
@@ -35,6 +27,12 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 	worldTransform_.translation_ = position;
 	isAlive_ = true;
 	state = new EnemyStateEntry();
+
+	dustModel_ = dustModel;
+	dustTextureHandle_ = dustTexture;
+
+	reFireModel_ = reFireModel;
+	reFireTextureHandle_ = reFireTexture;
 }
 
 Vector3 Enemy::GetWorldPosition() {
@@ -57,33 +55,39 @@ void Enemy::SetPosition(Vector3 speed) {
 	worldTransform_.translation_ = Math::Add(worldTransform_.translation_, speed);
 }
 
-/**
-void EnemyStateApproah::Update() {
-	Vector3 appSpeed(0, 0, -0.2f);
-	enemy_->SetPosition(appSpeed);
-
-	enemy_->Fire();
-
-	if (enemy_->GetWT().translation_.z < 0.0f) {
-		enemy_->ChangeState(new EnemyStateLeave);
-	}
-}
-
-void EnemyStateLeave::Update() {
-	Vector3 leaveSpeed(-0.2f, 0.2f, 0.2f);
-	enemy_->SetPosition(leaveSpeed);
-
-	enemy_->Fire();
-}
-
-**/
 
 void Enemy::Update() {
-	state->Update(this);
+	//state->Update(this);
 
 	worldTransform_.UpdateMatrix();
 	worldTransform_.TransferMatrix();
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
+
+	//火花の更新
+	for (std::list<std::unique_ptr<Dust>>::iterator dustIt = dusts_.begin(); dustIt != dusts_.end();) {
+		Dust* dust = dustIt->get();
+
+		if (dust->GetIsDead()) {
+			dustIt = dusts_.erase(dustIt);
+		}
+		else {
+			dust->Update();
+			dustIt++;
+		}
+	}
+
+	//残り火の更新
+	for (std::list<std::unique_ptr<ReFire>>::iterator ReFireIt = ReFires_.begin(); ReFireIt != ReFires_.end();) {
+		ReFire* ReFire = ReFireIt->get();
+
+		if (ReFire->GetIsDead()) {
+			ReFireIt = ReFires_.erase(ReFireIt);
+		}
+		else {
+			ReFire->Update();
+			ReFireIt++;
+		}
+	}
 
 	ImGui::Begin("enemyPos");
 	ImGui::Text("%f,%f,%f", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);
@@ -95,7 +99,17 @@ void Enemy::Update() {
 void Enemy::Draw(const ViewProjection& view) {
 	model_->Draw(worldTransform_, view, texturehandle_);
 
-	
+	//火花を描画
+	for(std::list<std::unique_ptr<Dust>>::iterator dustIt = dusts_.begin(); dustIt != dusts_.end();dustIt++){
+		Dust* dust = dustIt->get();
+		dustModel_->Draw(dust->GetWT(), view, dustTextureHandle_);
+	}
+
+	//残り火を描画
+	for (std::list<std::unique_ptr<ReFire>>::iterator ReFireIt = ReFires_.begin(); ReFireIt != ReFires_.end(); ReFireIt++) {
+		ReFire* ReFire = ReFireIt->get();
+		dustModel_->Draw(ReFire->GetWT(), view, dustTextureHandle_);
+	}
 }
 
 void Enemy::ChangePosition(Vector3 vector) {
@@ -131,8 +145,8 @@ void Enemy::OnCollision() {
 	for (int i = 0; i < MAXDUST; i++) {
 		SpawnDusts();
 	}
-	for (int i = 0; i < MAXBEAM; i++) {
- 		SpawnBeam();
+	for (int i = 0; i < MAXReFire; i++) {
+ 		SpawnReFire();
 	}
 }
 
@@ -169,14 +183,13 @@ void Enemy::Attack() {
 }
 
 void Enemy::SpawnDusts() {
-	Dust* newDust = new Dust();
-	newDust->Initialize(model_, worldTransform_.translation_,gameScene_->GetDustTexture());
-	gameScene_->AddDust(newDust);
-	//Dust_.push_back(newDust);
+	std::unique_ptr<Dust> newDust = std::make_unique<Dust>();
+	newDust->Initialize(worldTransform_.translation_);
+	dusts_.push_back(std::move(newDust));
 }
 
-void Enemy::SpawnBeam() {
-	Beam* newBeam = new Beam();
-	newBeam->Initialize(model_, worldTransform_.translation_, gameScene_->GetDustTexture());
-	gameScene_->AddBeam(newBeam);
+void Enemy::SpawnReFire() {
+	std::unique_ptr<ReFire> newReFire = std::make_unique<ReFire>();
+	newReFire->Initialize(worldTransform_.translation_);
+	ReFires_.push_back(std::move(newReFire));
 }

@@ -14,50 +14,23 @@
 #include "newMath.h"
 #include <list>
 #include "Dust.h"
-#include "Beam.h"
+#include "ReFire.h"
 
-#define MAXDUST 50
-#define MAXBEAM 15
+#define MAXDUST 200
+#define MAXReFire 0
 
 class Player;
 class GameScene;
 
 class Enemy;
 class IEnemyState;
-/**
-enum class Phase {
-	Approach,
-	Leave,
-};
 
-class EnemyState {
-
-protected:
-	Enemy* enemy_ = nullptr;
-
-public:
-	virtual void SetEnemy(Enemy* enemy) { enemy_ = enemy; }
-	virtual void Update(){};
-};
-
-class EnemyStateApproah : public EnemyState {
-
-public:
-	void Update();
-};
-
-class EnemyStateLeave : public EnemyState {
-
-public:
-	void Update();
-};
-**/
 class Enemy {
 
 public:
 	~Enemy();
 
-	void Initialize(Model* model, const Vector3& position);
+	void Initialize(Model* model, const Vector3& position,Model* dustModel,uint32_t& dustTexture, Model* reFireModel, uint32_t& reFireTexture);
 
 	void Update();
 
@@ -101,7 +74,7 @@ public:
 
 	void SpawnDusts();
 
-	void SpawnBeam();
+	void SpawnReFire();
 private:
 	WorldTransform worldTransform_;
 	Model* model_;
@@ -125,7 +98,13 @@ private:
 
 	bool isAlive_;
 
-	std::list <Dust*> dust_;
+	std::list<std::unique_ptr<Dust>> dusts_;
 
-	std::list <Beam*> beam_;
+	std::list <std::unique_ptr<ReFire>> ReFires_;
+
+	Model* dustModel_;
+	uint32_t dustTextureHandle_;
+
+	uint32_t reFireTextureHandle_ = 0;
+	Model* reFireModel_ = 0;
 };

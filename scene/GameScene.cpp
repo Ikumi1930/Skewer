@@ -30,7 +30,11 @@ void GameScene::Initialize() {
 	// テクスチャを読み込み
 	textureHandle_ = TextureManager::Load("SusumePlayer1.png");
 
-	dustTextureHandle_ = TextureManager::Load("ball.png");
+	dustModel_ = Model::CreateFromOBJ("ball", true);
+	dustTextureHandle_ = TextureManager::Load("ball/ball.png");
+
+	reFireModel_ = Model::CreateFromOBJ("ReFire", true);
+	reFireTextureHandle_ = TextureManager::Load("ReFire/ReFire.png");
 	// 3Dモデルの生成
 	model_ = Model::Create();
 	worldTransform_.Initialize();
@@ -64,7 +68,7 @@ void GameScene::Initialize() {
 
 	
 
-	// TextureManager::Load("beam.png");
+	// TextureManager::Load("ReFire.png");
 
 	LoadEnemyPopData();
 }
@@ -112,32 +116,6 @@ void GameScene::Update() {
 
 	for (TimedCall* timedCalls : timedCalls_) {
 		timedCalls->Update();
-	}
-
-
-	//パーティクル更新
-	dusts_.remove_if([](Dust* dust) {
-		if (dust->GetIsDead()) {
-			delete dust;
-			return true;
-		}
-		return false;
-		});
-
-	for (Dust* dust : dusts_) {
-		dust->Update();
-	}
-
-	beams_.remove_if([](Beam* beam) {
-		if (beam->GetIsDead()) {
-			delete beam;
-			return true;
-		}
-		return false;
-		});
-
-	for (Beam* beam : beams_) {
-		beam->Update();
 	}
 
 
@@ -212,14 +190,6 @@ void GameScene::Draw() {
 
 	for (EnemyBullet* bullet : enemyBullets_) {
 		bullet->Draw(viewProjection_);
-	}
-
-	for (Dust* dust : dusts_) {
-		dust->Draw(viewProjection_);
-	}
-
-	for (Beam* beam : beams_) {
-		beam->Draw(viewProjection_);
 	}
 
 	//skydome_->Draw(viewProjection_);
@@ -323,9 +293,9 @@ void GameScene::AddEnemyBullet(EnemyBullet* enemyBullet) {
 
 void GameScene::AddEnemy(Enemy* enemy) { enemys_.push_back(enemy); }
 
-void GameScene::EnemyIni(Model* model, const Vector3 position) {
+void GameScene::EnemyIni(Model* model, const Vector3 position,Model* dustModel,uint32_t dustTexture, Model* reFireModel, uint32_t& reFireTexture) {
 	Enemy* newEnemy = new Enemy();
-	newEnemy->Initialize(model, position);
+	newEnemy->Initialize(model, position,dustModel,dustTexture,reFireModel,reFireTexture);
 	newEnemy->SetPlayer(player_);
 	newEnemy->SetGameScene(this);
 	enemys_.push_back(newEnemy);
@@ -373,7 +343,7 @@ void GameScene::UpDateEnemyPopCommands() {
 			getline(line_stream, word, ',');
 			float z = (float)std::atof(word.c_str());
 
-			EnemyIni(model_, Vector3(x, y, z));
+			EnemyIni(model_, Vector3(x, y, z),dustModel_,dustTextureHandle_,reFireModel_,reFireTextureHandle_);
 		} else if (word.find("WAIT") == 0) {
 			getline(line_stream, word, ',');
 
@@ -384,13 +354,5 @@ void GameScene::UpDateEnemyPopCommands() {
 			break;
 		}
 	}
-}
-
-void GameScene::AddDust(Dust* dust) {
-	dusts_.push_back(dust);
-}
-
-void GameScene::AddBeam(Beam* beam) {
-	beams_.push_back(beam);
 }
 

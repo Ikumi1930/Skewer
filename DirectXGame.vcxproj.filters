@@ -108,7 +108,7 @@
     <ClCompile Include="Dust.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Beam.cpp">
+    <ClCompile Include="ReFire.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -239,7 +239,7 @@
     <ClInclude Include="Dust.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Beam.h">
+    <ClInclude Include="ReFire.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

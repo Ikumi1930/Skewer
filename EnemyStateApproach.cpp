@@ -3,7 +3,7 @@
 #include "EnemyStateLeave.h"
 
 void EnemyStateApproach::Update(Enemy* pEnemy) {
-	Vector3 move = {0.0f, 0.0f, 0.0f};
+	//Vector3 move = {0.0f, 0.0f, 0.0f};
 
 	//pEnemy->ChangePosition(move);
 	pEnemy->isFire = true;

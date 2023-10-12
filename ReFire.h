@@ -8,18 +8,19 @@
 class Enemy;
 class GameScene;
 
-class Beam
+class ReFire
 {
 public:
-	void Initialize(Model* model, const Vector3& position, uint32_t textureHandle);
+	//初期化
+	void Initialize(const Vector3& position);
 
+	//更新
 	void Update();
 
-	void Draw(const ViewProjection& view);
-
+	//生存フラグ
 	bool GetIsDead() { return isDead_; }
 
-	//void Spawn();
+	WorldTransform GetWT() { return worldTransform_; }
 private:
 	WorldTransform worldTransform_;
 
@@ -29,20 +30,34 @@ private:
 	Model* model_;
 	uint32_t texturehandle_;
 
-	int velocityValue_ = 5;
+	//速度の値
+	float velocityValue_ = 5;
 
+	//加速度の値
 	Vector3 accelerationValue_;
 
+	//速度
 	Vector3 velocity_;
 
+	//加速度
 	Vector3 acceleration_;
 
-	static const int32_t kLifeTime = 100;
+	//質量
+	float mass_;
+
+	//重力
+	float gravity_ = 1.0f;
+
+	//生存時間
+	static const int32_t kLifeTime = 0;
+
 	// デスタイマー
-	int32_t deathtimer_ = kLifeTime;
+	int32_t deathtimer_ = 0;
+
 	// デスフラグ
 	bool isDead_ = false;
 
+	//角度
 	float velocityXZ_ = 0;
 };
 

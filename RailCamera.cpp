@@ -8,7 +8,7 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotate) {
 }
 
 void RailCamera::Updata() {
-	SetPosition({0.0f, 0.0f, float(0.1f)});
+	SetPosition({0.0f, 0.0f, 0.0f});
 
 	ImGui::Begin("Camera");
 	ImGui::SliderFloat3("trans", &worldTransform_.translation_.x, -10.0f, 10.0f);

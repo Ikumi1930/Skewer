@@ -3,9 +3,13 @@
 #include <Vector2.h>
 #include <Vector3.h>
 #include <time.h>
+#include <random>
+
+float GetRandom(float min, float max);
 
 int GetRandom(int min, int max);
 
+Vector3 GetRandomVector3(float min, float max);
 //float GetRandom(float min, float max);
 
 float Clamp(float number, float min, float max);
@@ -17,7 +21,7 @@ Vector3 Add(const float& scalar, Vector3& v);
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 Vector3 Subtract(const float& scalar, Vector3& v);
 // スカラー倍
-Vector3 Multiply(float scalar, const Vector3& v);
+Vector3 Multiply(const Vector3& v, float scalar);
 // 内積
 float Dot(const Vector3& v1, const Vector3& v2);
 // 長さ(ノルム)

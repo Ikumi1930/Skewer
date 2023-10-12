@@ -4,6 +4,27 @@
 #include <cmath>
 #include <math.h>
 
+Vector3 GetRandomVector3(float min, float max) {
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> dis(min, max);
+
+	Vector3 randomVector;
+	randomVector.x = dis(gen);
+	randomVector.y = dis(gen);
+	randomVector.z = dis(gen);
+
+	return randomVector;
+}
+
+float GetRandom(float min, float max) {
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> dis(min, max);
+
+	return dis(gen);
+}
+
 float Clamp(float number, float min, float max) {
 	if (min > number) {
 		return min;
@@ -55,7 +76,7 @@ Vector3 Subtract(const float& scalar, Vector3& v) {
 	return num;
 }
 
-Vector3 Multiply(float scalar, const Vector3& v) {
+Vector3 Multiply(const Vector3& v, float scalar) {
 	Vector3 num = {scalar * v.x, scalar * v.y, scalar * v.z};
 	return num;
 }

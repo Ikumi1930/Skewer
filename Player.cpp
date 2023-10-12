@@ -22,7 +22,7 @@ void Player::Attack() {
 			isAttack = false;
 		}
 	} else if (isControl) {
-		if (input_->PushKey(DIK_SPACE)) {
+		if (input_->PushKey(DIK_SPACE) || input_->IsPressMouse(0)) {
 			isAttack = true;
 		} else {
 			isAttack = false;
@@ -73,7 +73,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 
 	worldTransform3DReticle_.Initialize();
 
-	uint32_t textureReticle = TextureManager::Load("white1x1.png");
+	uint32_t textureReticle = TextureManager::Load("reticle.png");
 
 	sprite2DReticle_ = Sprite::Create(
 	    textureReticle, {WinApp::kWindowWidth / 2, WinApp::kWindowHeight / 2}, {1, 1, 1, 1},
@@ -211,7 +211,7 @@ void Player::Update(ViewProjection& viewProjection) {
 void Player::Draw(ViewProjection viewProjection) {
 
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-	model_->Draw(worldTransform3DReticle_, viewProjection, textureHandle_);
+	//model_->Draw(worldTransform3DReticle_, viewProjection, textureHandle_);
 	// 弾描画
 	/* if (bullet_) {
 	    bullet_->Draw(viewProjection);
@@ -226,12 +226,12 @@ void Player::Draw(ViewProjection viewProjection) {
 void Player::DrawUI() { sprite2DReticle_->Draw(); }
 
 void Player::MouseUpdate(ViewProjection& view) {
-
-	if (input_->TriggerKey(DIK_M)) {
+	isControl = true;
+	/*if (input_->TriggerKey(DIK_M)) {
 		isControl = true;
 	} else if (input_->TriggerKey(DIK_C)) {
 		isControl = false;
-	}
+	}*/
 
 	if (isControl) {
 		POINT mousePosition;
