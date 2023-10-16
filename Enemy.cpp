@@ -77,15 +77,15 @@ void Enemy::Update() {
 	}
 
 	//残り火の更新
-	for (std::list<std::unique_ptr<ReFire>>::iterator ReFireIt = ReFires_.begin(); ReFireIt != ReFires_.end();) {
-		ReFire* ReFire = ReFireIt->get();
+	for (std::list<std::unique_ptr<ReFire>>::iterator reFireIt = reFires_.begin(); reFireIt != reFires_.end();) {
+		ReFire* reFire = reFireIt->get();
 
-		if (ReFire->GetIsDead()) {
-			ReFireIt = ReFires_.erase(ReFireIt);
+		if (reFire->GetIsDead()) {
+			reFireIt = reFires_.erase(reFireIt);
 		}
 		else {
-			ReFire->Update();
-			ReFireIt++;
+			reFire->Update();
+			reFireIt++;
 		}
 	}
 
@@ -106,9 +106,9 @@ void Enemy::Draw(const ViewProjection& view) {
 	}
 
 	//残り火を描画
-	for (std::list<std::unique_ptr<ReFire>>::iterator ReFireIt = ReFires_.begin(); ReFireIt != ReFires_.end(); ReFireIt++) {
-		ReFire* ReFire = ReFireIt->get();
-		dustModel_->Draw(ReFire->GetWT(), view, dustTextureHandle_);
+	for (std::list<std::unique_ptr<ReFire>>::iterator reFireIt = reFires_.begin(); reFireIt != reFires_.end(); reFireIt++) {
+		ReFire* reFire = reFireIt->get();
+		dustModel_->Draw(reFire->GetWT(), view, dustTextureHandle_);
 	}
 }
 
@@ -191,5 +191,5 @@ void Enemy::SpawnDusts() {
 void Enemy::SpawnReFire() {
 	std::unique_ptr<ReFire> newReFire = std::make_unique<ReFire>();
 	newReFire->Initialize(worldTransform_.translation_);
-	ReFires_.push_back(std::move(newReFire));
+	reFires_.push_back(std::move(newReFire));
 }

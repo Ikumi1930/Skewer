@@ -16,8 +16,8 @@
 #include "Dust.h"
 #include "ReFire.h"
 
-#define MAXDUST 200
-#define MAXReFire 0
+#define MAXDUST 150
+#define MAXReFire 30
 
 class Player;
 class GameScene;
@@ -100,7 +100,7 @@ private:
 
 	std::list<std::unique_ptr<Dust>> dusts_;
 
-	std::list <std::unique_ptr<ReFire>> ReFires_;
+	std::list <std::unique_ptr<ReFire>> reFires_;
 
 	Model* dustModel_;
 	uint32_t dustTextureHandle_;

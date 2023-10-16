@@ -15,7 +15,7 @@ void ReFire::Initialize(const Vector3& position) {
 	acceleration_ = Multiply(velocity_, GetRandom(-0.02f, -0.01f));
 	
 	//質量をランダムの値で初期化
-	mass_ = GetRandom(0.005f, 0.001f);
+	mass_ = GetRandom(0.001f, 0.003f);
 
 	//重力に質量を加えて初期化
 	gravity_ = gravity_ * mass_;

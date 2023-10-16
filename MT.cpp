@@ -3,13 +3,14 @@
 #include <assert.h>
 #include <cmath>
 #include <math.h>
+#include <random>
 
 Vector3 GetRandomVector3(float min, float max) {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> dis(min, max);
 
-	Vector3 randomVector;
+	Vector3 randomVector{};
 	randomVector.x = dis(gen);
 	randomVector.y = dis(gen);
 	randomVector.z = dis(gen);
